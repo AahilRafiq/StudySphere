@@ -1,12 +1,14 @@
 import {db} from '@/db/db'
-import {user} from '@/db/schema'
+import {User} from '@/db/schema'
+import { auth } from '@/auth'
 
 export default async function() {
-    const users = await db.select().from(user)
+    // const users = await db.select().from(User)
+    const session = await auth()
 
     return (
         <div>
-            <p>{JSON.stringify(users)}</p>
+            <p>{JSON.stringify(session)}</p>
         </div>
     )
 }
