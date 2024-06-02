@@ -1,5 +1,5 @@
 DO $$ BEGIN
- CREATE TYPE "public"."country" AS ENUM('USA', 'Canada', 'UK', 'Australia', 'India');
+ CREATE TYPE "public"."country" AS ENUM('USA', 'Australia', 'India', 'South');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
@@ -39,8 +39,7 @@ CREATE TABLE IF NOT EXISTS "Group" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text,
 	"description" text,
-	"category" varchar(100),
-	"country" "country"
+	"category" varchar(100)
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "GroupTag" (
@@ -66,6 +65,7 @@ CREATE TABLE IF NOT EXISTS "User" (
 	"name" text,
 	"email" text,
 	"password" text,
+	"country" "country",
 	CONSTRAINT "User_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint

@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { defineConfig } from "drizzle-kit";
 import { POSTGRES_URI } from "./dev_vars";
 

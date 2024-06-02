@@ -1,5 +1,5 @@
 {
-  "id": "7373efe0-cc51-44b3-88c0-b2a77fce0ced",
+  "id": "b0cf35f3-11f2-4165-a4e2-aa7944d86c98",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -217,13 +217,6 @@
           "type": "varchar(100)",
           "primaryKey": false,
           "notNull": false
-        },
-        "country": {
-          "name": "country",
-          "type": "country",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
@@ -410,6 +403,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
+        },
+        "country": {
+          "name": "country",
+          "type": "country",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -488,10 +488,9 @@
       "schema": "public",
       "values": [
         "USA",
-        "Canada",
-        "UK",
         "Australia",
-        "India"
+        "India",
+        "South"
       ]
     },
     "public.role": {

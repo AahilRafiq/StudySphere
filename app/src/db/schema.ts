@@ -1,7 +1,8 @@
 import { serial, text, timestamp, pgTable , pgEnum , varchar } from "drizzle-orm/pg-core";
+import countries from '@/constants/countries.json'
 
 /* ENUMS */ 
-export const countryEnum = pgEnum("country", ["USA", "Canada", "UK", "Australia", "India"]);
+export const countryEnum = pgEnum("country", ["USA","Australia","India","South"]);
 export const roleEnum = pgEnum("role", ["Admin", "Creater", "Member"]);
 
 /* TABLES */ 
@@ -10,6 +11,7 @@ export const User = pgTable("User", {
   username: text("name"),
   email: text("email").unique(),
   password: text("password"),
+  country: countryEnum("country"),
 });
 
 export const Category = pgTable("Category", {
@@ -20,8 +22,7 @@ export const Group = pgTable("Group", {
   id: serial("id").primaryKey(),
   name: text("name"),
   description: text("description"),
-  category: varchar("category" , {length : 100}).references(() => Category.category),
-  country: countryEnum("country"),
+  category: varchar("category" , {length : 100}).references(() => Category.category)
 });
 
 export const UserGroup = pgTable("UserGroup", {

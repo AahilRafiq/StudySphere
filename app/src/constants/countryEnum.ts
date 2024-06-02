@@ -1,4 +1,4 @@
-[
+export enum countries {
     "Afghanistan",
     "Albania",
     "Algeria",
@@ -239,4 +239,6 @@
     "Yemen",
     "Zambia",
     "Zimbabwe"
-]
+}
+
+  
