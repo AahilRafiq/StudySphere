@@ -1,5 +1,5 @@
-export default async function SignIn(username:string , password:string) {
-    return fetch('/api/auth/signin',{
+export default async function SignUp(username:string ,email:string , password:string, confirmPass: string) {
+    return fetch('/api/auth/signup',{
         method:'POST',
         cache:'no-cache',
         headers:{
@@ -7,7 +7,9 @@ export default async function SignIn(username:string , password:string) {
         },
         body: JSON.stringify({
             username,
-            password
+            email,
+            password,
+            confirmPass
         })
     })
 }   

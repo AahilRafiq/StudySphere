@@ -11,8 +11,14 @@ export async function POST(req: NextRequest , res: NextResponse) {
         username: string,
         password: string,
         email: string,
+        confirmPass: string
     }
-    const {username , password ,email }:signUpReqBody = await req.json()
+    const {username , password ,email , confirmPass }:signUpReqBody = await req.json()
+    if(username.length < 4 || email.length < 4 || password !== confirmPass || password.length < 6) {
+        return NextResponse.json({
+            success:'false'
+        },{ status:401 })
+    }
 
     const exisitngUser = getFirstRecord( await 
         db.select().from(User).where(or(
