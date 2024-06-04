@@ -2,13 +2,11 @@ import Link from "next/link"
 import Image from "next/image"
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Users , Contact , Cloud, User  } from "lucide-react"
-import Navbar from "@/components/Navbar"
+import { Users , Contact , Cloud  } from "lucide-react"
 
 export default function Component() {
   return (
     <>
-    <Navbar />
     <div key="1" className="flex flex-col min-h-[100dvh] px-4 md:px-6 py-4 md:py-6">
       <main className="flex-1">
         <section className="w-full ">

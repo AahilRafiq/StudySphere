@@ -1,17 +1,14 @@
 import { serial, text, timestamp, pgTable , pgEnum , varchar } from "drizzle-orm/pg-core";
-import countries from '@/constants/countries.json'
 
 /* ENUMS */ 
-export const countryEnum = pgEnum("country", ["USA","Australia","India","South"]);
 export const roleEnum = pgEnum("role", ["Admin", "Creater", "Member"]);
 
 /* TABLES */ 
 export const User = pgTable("User", {
   id: serial("id").primaryKey(),
-  username: text("name"),
+  name: text("name"),
   email: text("email").unique(),
-  password: text("password"),
-  country: countryEnum("country"),
+  password: text("password")
 });
 
 export const Category = pgTable("Category", {
