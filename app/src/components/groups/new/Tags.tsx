@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 import { useState , ChangeEvent } from "react"
 import { getExistingTags } from "@/actions/groups/selectTags"
+import { createNewTag } from "@/actions/groups/newTag"
 
 interface Tag {
     id: number,
@@ -18,13 +19,34 @@ export default function() {
 
     const [query , setQuery] = useState('')
     const [tags , setTags] = useState<Tag[]>([])
+    const [selectedTags , setSelectedTags] = useState<Tag[]>([])
 
     async function handleQuery(e:ChangeEvent<HTMLInputElement>) {
         setQuery(e.target.value)
-        if(query.length !== 0 && query.length < 2) return
+        if(query.length !== 0 && query.length < 1) return
 
         const res = await getExistingTags(query)
         setTags(res)
+    }
+
+    async function handleNewTag() {
+        if(query.length === 0) return
+        const res = await createNewTag(query)
+        if(res !== null) {
+          setTags([res])
+        } else {
+          alert('Tag already exists')
+        }
+    }
+
+    function handleSelection(id: number) {
+        const selectedTag = tags.find(tag => tag.id === id)
+        if(selectedTags.find(tag => tag.id === selectedTag.id)) return
+        setSelectedTags([...selectedTags , selectedTag])
+    }
+
+    function handleRemoveTag(id:number) {
+      setSelectedTags(selectedTags.filter(tag => tag.id !== id))
     }
 
     return(
@@ -32,38 +54,24 @@ export default function() {
           <Label htmlFor="tags">Tags</Label>
           <div className="flex flex-wrap gap-2">
 
-            {/* Inidivdual tag */}
-            <div className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full flex items-center gap-2">
-              <span className="text-sm">Study</span>
-              <button className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-50">
-                <XIcon className="h-4 w-4" />
-              </button>
-            </div>
+            {/* Selected tags */}
 
-            <div className="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full flex items-center gap-2">
-              <span className="text-sm">Group</span>
-              <button className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-50">
-                <XIcon className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full flex items-center gap-2">
-              <span className="text-sm">Learning</span>
-              <button className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-50">
-                <XIcon className="h-4 w-4" />
-              </button>
-            </div>
+            {selectedTags?.map(tag => {
+                return <SelectedTag key={tag.id} id={tag.id} handleRemoveTag={handleRemoveTag} name={tag.name}/>
+            })}
+
           </div>
-          <Select>
+          <Select >
             <SelectTrigger>
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
-              <SelectGroup>
+              <SelectGroup className="flex flex-col">
                 <SelectLabel>Existing Tags</SelectLabel>
 
                 {/* Display tags */}
                 {tags.map(tag => {
-                    return <SelectItem key={tag.id} value={tag.name}>{tag.name}</SelectItem>
+                  return <DisplayTag key={tag.id} id={tag.id} handleSelection={handleSelection} name={tag.name}/>
                 })}
 
               </SelectGroup>
@@ -74,7 +82,7 @@ export default function() {
                 <div className="px-4 py-2">
                   <div className="flex items-center space-x-2">
                     <Input onChange={handleQuery} placeholder="Search or create new" />
-                    <Button size="sm">Create</Button>
+                    <Button onClick={handleNewTag} size="sm">Create</Button>
                   </div>
                 </div>
 
@@ -84,3 +92,30 @@ export default function() {
         </div>
     )
 }
+
+interface SelectedTagProps {
+    id: number,
+    name: string,
+    handleRemoveTag:(id:number)=>void
+}
+
+function SelectedTag({id , name , handleRemoveTag}:SelectedTagProps) {
+    return(
+        <div className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded-full flex items-center gap-2">
+          <span className="text-sm">{name}</span>
+          <button onClick={()=>handleRemoveTag(id)} className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-50">
+            <XIcon className="h-4 w-4" />
+          </button>
+        </div>
+    )
+}
+
+interface DisplayTagProps {
+  id: number,
+  name: string,
+  handleSelection:(id:number)=>void
+}
+function DisplayTag({id , name , handleSelection}:DisplayTagProps) {
+    return <span className="ml-4"><Button variant="ghost" value={name} onClick={()=>handleSelection(id)}>{name}</Button></span>
+}
+

@@ -6,20 +6,20 @@ import { getFirstRecord } from "@/db/helpers/getFirstRecord"
 
 export async function createNewCategory(str: string) {
     const input = toTitleCase(str)
-    const existingTag = getFirstRecord(await
+    const existingCategory = getFirstRecord(await
         db.select()
         .from(Category)
         .where(like(Category.name , input))
         .limit(1)
-    )    
+    )
     
-    if(existingTag !== undefined) return null
+    if(existingCategory !== undefined) return null
 
-    const newtag = getFirstRecord(await db.insert(Category).values({
+    const newCatergory = getFirstRecord(await db.insert(Category).values({
         name:input
     }).returning())
 
-    return newtag
+    return newCatergory
 }
 
 function toTitleCase(str: string) {
