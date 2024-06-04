@@ -6,7 +6,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectL
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
-import { useState , ChangeEvent } from "react"
+import { useState , ChangeEvent, Dispatch, SetStateAction } from "react"
 import { getExistingTags } from "@/actions/groups/selectTags"
 import { createNewTag } from "@/actions/groups/newTag"
 
@@ -15,7 +15,7 @@ interface Tag {
     name: string
 }
 
-export default function() {
+export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAction<Tag[]>>}) {
 
     const [query , setQuery] = useState('')
     const [tags , setTags] = useState<Tag[]>([])
@@ -40,13 +40,17 @@ export default function() {
     }
 
     function handleSelection(id: number) {
-        const selectedTag = tags.find(tag => tag.id === id)
-        if(selectedTags.find(tag => tag.id === selectedTag.id)) return
-        setSelectedTags([...selectedTags , selectedTag])
+      const selectedTag = tags.find(tag => tag.id === id)
+      if(selectedTags.find(tag => tag.id === selectedTag.id)) return
+      const newSelectedTags = [...selectedTags , selectedTag]
+      setTagsToSubmit(newSelectedTags)
+      setSelectedTags(newSelectedTags)
     }
 
     function handleRemoveTag(id:number) {
-      setSelectedTags(selectedTags.filter(tag => tag.id !== id))
+      const newSelectedTags = selectedTags.filter(tag => tag.id !== id)
+      setTagsToSubmit(newSelectedTags)
+      setSelectedTags(newSelectedTags)
     }
 
     return(

@@ -8,6 +8,8 @@ import { Textarea } from "@/components/ui/textarea"
 import Category from "@/components/groups/new/Category"
 import Tags from "@/components/groups/new/Tags"
 import { useState } from "react"
+import { createNewGroup } from "@/actions/groups/newGroup"
+import { useRouter } from "next/navigation"
 
 interface Category {
   id: number,
@@ -21,10 +23,27 @@ interface Tag {
 
 export default function() {
 
+  const router = useRouter()
   const [title,setTitle] = useState('')
   const [description,setDescription] = useState('')
   const [category,setCategory] = useState<Category>()
   const [tags,setTags] = useState<Tag[]>()
+
+  async function handleSubmit() {
+    if(title.length <= 4) return alert('Please enter a title of length atleast 4')
+    if(category === undefined) return alert('Please select a category')
+    if(!tags || tags.length === 0) return alert('Please select at least one tag')
+    if(description.length <= 10) return alert('Please enter a description of length atleast 10')
+    
+    const res = await createNewGroup(title,description,category,tags)
+    if(res) {
+      router.push('/groups')
+    } else if(res === null) {
+      alert('Error Occured while creating group')
+    } else {
+      alert('Group already exists')
+    }
+  }
 
   return (
     <Card className="w-full max-w-3xl mx-auto">
@@ -42,7 +61,7 @@ export default function() {
         <Category setSelectedCategory={setCategory}/>
 
         {/* Select Tags */}
-        <Tags/>
+        <Tags setTagsToSubmit={setTags}/>
         
         <div className="space-y-2">
           <Label htmlFor="description">Description</Label>
@@ -50,7 +69,7 @@ export default function() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button type="submit" className="ml-auto">
+        <Button onClick={handleSubmit} type="submit" className="ml-auto">
           Create Study Group
         </Button>
       </CardFooter>
