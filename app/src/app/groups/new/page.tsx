@@ -7,8 +7,25 @@ import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import Category from "@/components/groups/new/Category"
 import Tags from "@/components/groups/new/Tags"
+import { useState } from "react"
+
+interface Category {
+  id: number,
+  name: string
+}
+
+interface Tag {
+  id: number,
+  name: string
+}
 
 export default function() {
+
+  const [title,setTitle] = useState('')
+  const [description,setDescription] = useState('')
+  const [category,setCategory] = useState<Category>()
+  const [tags,setTags] = useState<Tag[]>()
+
   return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader>
@@ -18,31 +35,18 @@ export default function() {
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="title">Title</Label>
-          <Input id="title" placeholder="Enter study group title" />
+          <Input onChange={e=>setTitle(e.target.value)} id="title" placeholder="Enter study group title" />
         </div>
         
         {/* Select category */}
-        <Category/>
+        <Category setSelectedCategory={setCategory}/>
 
         {/* Select Tags */}
         <Tags/>
         
         <div className="space-y-2">
           <Label htmlFor="description">Description</Label>
-          <Textarea id="description" placeholder="Enter study group description" className="min-h-[100px]" />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="num-people">Number of People</Label>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
-              -
-            </Button>
-            <Input id="num-people" type="number" min="1" max="100" className="w-20 text-center" />
-            <Button variant="outline" size="sm">
-              +
-            </Button>
-          </div>
+          <Textarea onChange={e=>setDescription(e.target.value)} id="description" placeholder="Enter study group description" className="min-h-[100px]" />
         </div>
       </CardContent>
       <CardFooter>
