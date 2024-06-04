@@ -6,13 +6,26 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectL
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
+import { useState , ChangeEvent } from "react"
+import { getExistingTags } from "@/actions/groups/selectTags"
 
+interface Tag {
+    id: number,
+    name: string
+}
 
 export default function() {
 
+    const [query , setQuery] = useState('')
+    const [tags , setTags] = useState<Tag[]>([])
 
+    async function handleQuery(e:ChangeEvent<HTMLInputElement>) {
+        setQuery(e.target.value)
+        if(query.length !== 0 && query.length < 2) return
 
-
+        const res = await getExistingTags(query)
+        setTags(res)
+    }
 
     return(
         <div className="space-y-2">
@@ -42,26 +55,25 @@ export default function() {
           </div>
           <Select>
             <SelectTrigger>
-              <SelectValue placeholder="Select tags" />
+              <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Existing Tags</SelectLabel>
 
                 {/* Display tags */}
-                <SelectItem value="study">Study</SelectItem>
-                <SelectItem value="group">Group</SelectItem>
-                <SelectItem value="learning">Learning</SelectItem>
+                {tags.map(tag => {
+                    return <SelectItem key={tag.id} value={tag.name}>{tag.name}</SelectItem>
+                })}
 
-              </SelectGroup>input , 
+              </SelectGroup>
               <Separator />
               <SelectGroup>
 
                 {/* Create a new Tag */}
-                <SelectLabel>Create New</SelectLabel>
                 <div className="px-4 py-2">
                   <div className="flex items-center space-x-2">
-                    <Input placeholder="New tag name" />
+                    <Input onChange={handleQuery} placeholder="Search or create new" />
                     <Button size="sm">Create</Button>
                   </div>
                 </div>

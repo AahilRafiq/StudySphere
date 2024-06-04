@@ -1,5 +1,5 @@
 {
-  "id": "b0cf35f3-11f2-4165-a4e2-aa7944d86c98",
+  "id": "997912fe-2355-4c2d-8d4e-6b910b8f174b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -8,11 +8,17 @@
       "name": "Category",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
         "category": {
           "name": "category",
           "type": "varchar(100)",
-          "primaryKey": true,
-          "notNull": true
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -212,24 +218,24 @@
           "primaryKey": false,
           "notNull": false
         },
-        "category": {
-          "name": "category",
-          "type": "varchar(100)",
+        "categoryId": {
+          "name": "categoryId",
+          "type": "serial",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "Group_category_Category_category_fk": {
-          "name": "Group_category_Category_category_fk",
+        "Group_categoryId_Category_id_fk": {
+          "name": "Group_categoryId_Category_id_fk",
           "tableFrom": "Group",
           "tableTo": "Category",
           "columnsFrom": [
-            "category"
+            "categoryId"
           ],
           "columnsTo": [
-            "category"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -403,13 +409,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "country": {
-          "name": "country",
-          "type": "country",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
@@ -483,16 +482,6 @@
     }
   },
   "enums": {
-    "public.country": {
-      "name": "country",
-      "schema": "public",
-      "values": [
-        "USA",
-        "Australia",
-        "India",
-        "South"
-      ]
-    },
     "public.role": {
       "name": "role",
       "schema": "public",

@@ -8,7 +8,7 @@ export async function getExistingCategories(str: string) {
   const tags = await db
     .select()
     .from(Category)
-    .where(like(Category.category, `%${input}%`))
+    .where(like(Category.name, `%${input}%`))
     .limit(5)
   return tags;
 }

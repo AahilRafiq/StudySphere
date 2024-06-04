@@ -1,6 +1,6 @@
 {
-  "id": "d9ed09fa-2442-4038-8bbc-e09953b1b2c4",
-  "prevId": "b0cf35f3-11f2-4165-a4e2-aa7944d86c98",
+  "id": "bdf1fed2-cf60-41d9-97ca-c80db411c74e",
+  "prevId": "997912fe-2355-4c2d-8d4e-6b910b8f174b",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -8,11 +8,17 @@
       "name": "Category",
       "schema": "",
       "columns": {
-        "category": {
-          "name": "category",
-          "type": "varchar(100)",
+        "id": {
+          "name": "id",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -212,24 +218,24 @@
           "primaryKey": false,
           "notNull": false
         },
-        "category": {
-          "name": "category",
-          "type": "varchar(100)",
+        "categoryId": {
+          "name": "categoryId",
+          "type": "serial",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "Group_category_Category_category_fk": {
-          "name": "Group_category_Category_category_fk",
+        "Group_categoryId_Category_id_fk": {
+          "name": "Group_categoryId_Category_id_fk",
           "tableFrom": "Group",
           "tableTo": "Category",
           "columnsFrom": [
-            "category"
+            "categoryId"
           ],
           "columnsTo": [
-            "category"
+            "id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
