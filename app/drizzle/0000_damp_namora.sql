@@ -1,17 +1,12 @@
 DO $$ BEGIN
- CREATE TYPE "public"."country" AS ENUM('USA', 'Australia', 'India', 'South');
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  CREATE TYPE "public"."role" AS ENUM('Admin', 'Creater', 'Member');
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "Category" (
-	"category" varchar(100) PRIMARY KEY NOT NULL
+	"id" serial PRIMARY KEY NOT NULL,
+	"category" varchar(100)
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "ChatRoom" (
@@ -39,7 +34,7 @@ CREATE TABLE IF NOT EXISTS "Group" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text,
 	"description" text,
-	"category" varchar(100)
+	"categoryId" serial NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "GroupTag" (
@@ -65,7 +60,6 @@ CREATE TABLE IF NOT EXISTS "User" (
 	"name" text,
 	"email" text,
 	"password" text,
-	"country" "country",
 	CONSTRAINT "User_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -106,7 +100,7 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "Group" ADD CONSTRAINT "Group_category_Category_category_fk" FOREIGN KEY ("category") REFERENCES "public"."Category"("category") ON DELETE no action ON UPDATE no action;
+ ALTER TABLE "Group" ADD CONSTRAINT "Group_categoryId_Category_id_fk" FOREIGN KEY ("categoryId") REFERENCES "public"."Category"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

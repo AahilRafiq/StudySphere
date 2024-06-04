@@ -12,14 +12,15 @@ export const User = pgTable("User", {
 });
 
 export const Category = pgTable("Category", {
-  category: varchar("category" , {length : 100}).primaryKey(),
+  id: serial("id").primaryKey(),
+  name: varchar("name" , {length : 100}),
 })
 
 export const Group = pgTable("Group", {
   id: serial("id").primaryKey(),
   name: text("name"),
   description: text("description"),
-  category: varchar("category" , {length : 100}).references(() => Category.category)
+  categoryId: serial("categoryId").references(() => Category.id)
 });
 
 export const UserGroup = pgTable("UserGroup", {
