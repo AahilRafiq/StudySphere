@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react"
 import { getExistingCategories } from "@/actions/groups/selectCategory"
 import { createNewCategory } from "@/actions/groups/newCategory"
+import { useToast } from "@/components/ui/use-toast"
 interface Category {
     id: number,
     name: string
@@ -15,6 +16,7 @@ interface Category {
 
 export default function ({setSelectedCategory}:{setSelectedCategory:Dispatch<SetStateAction<Category>>}) {
 
+    const {toast} = useToast()
     const [query , setQuery] = useState<string>('')
     const [catergories , setCategories] = useState<Category[]>([])
 
@@ -32,7 +34,11 @@ export default function ({setSelectedCategory}:{setSelectedCategory:Dispatch<Set
         if(res !== null) {
           setCategories([res])
         } else {
-          alert('Category already exists')
+          toast({
+            title: 'Error',
+            variant: 'destructive',
+            description: 'Category already exists'
+          })
         }
     }
 

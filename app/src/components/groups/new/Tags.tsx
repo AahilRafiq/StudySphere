@@ -9,6 +9,7 @@ import { XIcon } from "lucide-react"
 import { useState , ChangeEvent, Dispatch, SetStateAction } from "react"
 import { getExistingTags } from "@/actions/groups/selectTags"
 import { createNewTag } from "@/actions/groups/newTag"
+import { useToast } from "@/components/ui/use-toast"
 
 interface Tag {
     id: number,
@@ -17,6 +18,7 @@ interface Tag {
 
 export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAction<Tag[]>>}) {
 
+    const {toast} = useToast()
     const [query , setQuery] = useState('')
     const [tags , setTags] = useState<Tag[]>([])
     const [selectedTags , setSelectedTags] = useState<Tag[]>([])
@@ -35,7 +37,12 @@ export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAct
         if(res !== null) {
           setTags([res])
         } else {
-          alert('Tag already exists')
+          toast({
+            title: 'Error',
+            description: 'Tag already exists',
+            variant: 'destructive',
+            duration: 3000
+          })
         }
     }
 
