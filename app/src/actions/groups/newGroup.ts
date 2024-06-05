@@ -1,9 +1,10 @@
 'use server'
 import { db } from "@/db/db"
 import { getFirstRecord } from "@/db/helpers/getFirstRecord"
-import { Group , GroupTag } from "@/db/schema"
+import { Group , GroupTag , UserGroup } from "@/db/schema"
 import { eq } from "drizzle-orm"
-import { redirect } from "next/navigation"
+import { cookies } from "next/headers"
+import { verifyToken } from "@/lib/auth/auth"
 interface ICategory {
     id: number,
     name: string
@@ -20,6 +21,10 @@ interface IGroupTag {
 
 export async function createNewGroup(title:string , description:string , category:ICategory , tags:ITag[]) {
     
+    const authToken = cookies().get('auth_token')
+    if(!authToken) return null
+    const user = verifyToken(authToken.value)
+
     const existingGroup = getFirstRecord(await db.select().from(Group).where(eq(Group.name,title)).limit(1))
     if(existingGroup) return false
     
@@ -39,6 +44,11 @@ export async function createNewGroup(title:string , description:string , categor
             }
         })
         await db.insert(GroupTag).values(groupTags)
+        await db.insert(UserGroup).values({
+            role: "Creater",
+            groupId: newGroup.id,
+            userId: user.id
+        })
         return true
     } catch (err) {
         console.log(err);

@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { cookies } from 'next/headers'
+import { JwtPayload } from 'jsonwebtoken';
 
 export type jwtPayload = {
     id:number,
@@ -12,10 +13,9 @@ export function generateToken(payload: jwtPayload ) {
     })
     return token
 }
-
 export function verifyToken(token:string) {
-    const payload = jwt.verify(token , process.env.JWT_AUTH_SECRET)
-    return payload
+    const payload: JwtPayload = jwt.verify(token , process.env.JWT_AUTH_SECRET) as JwtPayload;
+    return payload;
 }
 
 export function getServerSession() {
