@@ -5,6 +5,7 @@ import { Group , GroupTag , UserGroup } from "@/db/schema"
 import { eq } from "drizzle-orm"
 import { cookies } from "next/headers"
 import { verifyToken } from "@/lib/auth/auth"
+import { error } from "console"
 interface ICategory {
     id: number,
     name: string
