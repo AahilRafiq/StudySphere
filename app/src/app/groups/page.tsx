@@ -1,31 +1,48 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { SearchIcon } from "lucide-react";
 import { FilterIcon } from "lucide-react";
-import { Category , Tag } from "@/db/schema";
+import { Category , Tag , Group } from "@/db/schema";
 import { InferSelectModel } from "drizzle-orm";
 import GroupCard from "@/components/groups/display/GroupCard";
 import FilterModal from "@/components/groups/display/FilterModal";
+import { findGroups } from "@/actions/groups/findGroups";
+import { useToast } from "@/components/ui/use-toast";
 
 type TCategory = InferSelectModel<typeof Category>
 type TTag = InferSelectModel<typeof Tag>
-
+type TGroup = InferSelectModel<typeof Group>
 interface IFilter {
     category: TCategory[],
     tags: TTag[],
 }
 
 export default function Component() {
+  const [groups, setGroups] = useState<TGroup[]>([]);
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<IFilter>({
     category:[],
     tags: [],
   });
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
+  const { toast } = useToast();
+
+  useEffect(() => {
+    findGroups().then((res) => {
+      if (res.success) {
+        setGroups(res.res);
+      } else {
+        toast({
+          title: "Error",
+          description: res.message,
+        });
+      }
+    });
+  } , [filters,search])
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -61,9 +78,9 @@ export default function Component() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Group Cards */}
-        {/* {groups.map((group) => (
+        {groups.map((group) => (
           <GroupCard group={group} />
-        ))} */}
+        ))}
       </div>
     </div>
   );

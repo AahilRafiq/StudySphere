@@ -10,14 +10,14 @@ export default function ({ group }) {
           {group.category}
         </div>
         <div className="text-sm font-semibold text-gray-500">
-          {group.members} members
+          {/* {group.members} members */}
         </div>
       </div>
-      <h3 className="text-xl font-bold mb-2">{group.title}</h3>
+      <h3 className="text-xl font-bold mb-2">{group.name}</h3>
       <div className="flex flex-wrap gap-2 mb-4">
-        {group.tags.map((tag) => (
+        {/* {group.tags.map((tag) => (
           <div>{tag}</div>
-        ))}
+        ))} */}
       </div>
       <p className="text-gray-500">{group.description}</p>
       <div className="mt-4">
