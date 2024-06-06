@@ -15,14 +15,14 @@ type TCategory = InferSelectModel<typeof Category>
 type TTag = InferSelectModel<typeof Tag>
 
 interface IFilter {
-    category?: TCategory,
+    category: TCategory[],
     tags: TTag[],
 }
 
 export default function Component() {
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<IFilter>({
-    category:undefined,
+    category:[],
     tags: [],
   });
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false)
@@ -52,6 +52,7 @@ export default function Component() {
         <FilterModal
           isFilterModalOpen={isFilterModalOpen}
           setIsFilterModalOpen={setIsFilterModalOpen}
+          setFilters={setFilters}
         />
       )}
 
