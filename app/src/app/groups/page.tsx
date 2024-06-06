@@ -32,7 +32,7 @@ export default function Component() {
   const { toast } = useToast();
 
   useEffect(() => {
-    findGroups().then((res) => {
+    findGroups(filters , search).then((res) => {
       if (res.success) {
         setGroups(res.res);
       } else {
