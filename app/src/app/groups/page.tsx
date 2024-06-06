@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog,DialogContent,DialogHeader,DialogTitle,DialogDescription,DialogFooter,} from "@/components/ui/dialog";
+import Link from "next/link";
 import { SearchIcon } from "lucide-react";
 import { FilterIcon } from "lucide-react";
 import { Category , Tag } from "@/db/schema";
@@ -31,7 +31,9 @@ export default function Component() {
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Find Study Groups</h1>
-        <Button>Create Group</Button>
+        <Link href="/groups/new">
+            <Button>Create Group</Button>
+        </Link>
       </div>
       <div className="flex items-center mb-8">
         <div className="relative flex-1 mr-4">
@@ -39,6 +41,7 @@ export default function Component() {
           <Input
             placeholder="Search groups..."
             className="pl-8"
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <Button variant="outline" onClick={() => setIsFilterModalOpen(true)}>
