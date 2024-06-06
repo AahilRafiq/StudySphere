@@ -11,12 +11,19 @@ export default function () {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [displayError, setDisplayError] = useState("");
+  const [error, setError] = useState(false);
+  if(error) throw new Error()
 
   async function handleSignIn() {
     const res = await SignIn(username, password);
     if (res.status === 401) {
-      setError("Invalid Credentials");
+      setDisplayError("Invalid Credentials");
+      return;
+    }
+
+    if(res.status === 500) {
+      setError(true);
       return;
     }
 
@@ -32,7 +39,7 @@ export default function () {
             <p className="text-gray-500 dark:text-gray-400">
               Enter your username below to login to your account
             </p>
-            <p className=" text-red-500">{error}</p>
+            <p className=" text-red-500">{displayError}</p>
           </div>
           <div className="space-y-4">
             <div className="space-y-2">

@@ -12,6 +12,7 @@ export async function POST(req: NextRequest , res: NextResponse) {
     }
     const {username , password}:signInReqBody = await req.json()
 
+    
     const user = (await db.select().from(User).where(eq(User.name , username)).limit(1))[0]
     if(!user || user.password !== password) {
         return NextResponse.json({
@@ -21,7 +22,7 @@ export async function POST(req: NextRequest , res: NextResponse) {
         })
     }
 
-    const newtoken = generateToken({id:user.id , name:user.name}) 
+    const newtoken = generateToken({id:user.id , name:user.name!}) 
     const response = NextResponse.json({
             success:'true'
         },{

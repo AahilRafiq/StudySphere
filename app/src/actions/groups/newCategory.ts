@@ -1,25 +1,48 @@
 "use server";
 import { db } from "@/db/db";
-import { Category } from "@/db/schema"
-import { like } from "drizzle-orm"
+import { Category , User } from "@/db/schema"
+import { InferInsertModel, like } from "drizzle-orm"
 import { getFirstRecord } from "@/db/helpers/getFirstRecord"
+import type { actionRes } from "@/types/serverActionResponse";
 
-export async function createNewCategory(str: string) {
-    const input = toTitleCase(str)
-    const existingCategory = getFirstRecord(await
-        db.select()
-        .from(Category)
-        .where(like(Category.name , input))
-        .limit(1)
-    )
+type TCategory = InferInsertModel<typeof Category>
+
+export async function createNewCategory(str: string):Promise<actionRes<TCategory>> {
+
+    const res: actionRes<TCategory> = {
+        success: undefined,
+        message: undefined,
+        res: undefined
+    }
+
+    try {
+        const input = toTitleCase(str)
+        const existingCategory = getFirstRecord(await
+            db.select()
+            .from(Category)
+            .where(like(Category.name , input))
+            .limit(1)
+        )
+        
+        if(existingCategory !== undefined) {
+            res.success = false
+            res.message = 'Category already exists!'
+        }
     
-    if(existingCategory !== undefined) return null
-
-    const newCatergory = getFirstRecord(await db.insert(Category).values({
-        name:input
-    }).returning())
-
-    return newCatergory
+        const newCatergory = getFirstRecord(await db.insert(Category).values({
+            name:input
+        }).returning())
+    
+        res.success = true
+        res.res = newCatergory
+        return res
+        
+    } catch(err) {
+        console.log(err)
+        res.success = false
+        res.message = 'Interal server error'
+        return res
+    }
 }
 
 function toTitleCase(str: string) {

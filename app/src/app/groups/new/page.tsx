@@ -18,6 +18,7 @@ import { useState } from "react";
 import { createNewGroup } from "@/actions/groups/newGroup";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import type { actionRes } from "@/types/serverActionResponse";
 
 interface Category {
   id: number;
@@ -38,49 +39,14 @@ export default function () {
   const [tags, setTags] = useState<Tag[]>();
 
   async function handleSubmit() {
-    if (title.length <= 4) {
-      return toast({
-        title: "Error",
-        variant: "destructive",
-        description: "Please enter a title of length atleast 4",
-      });
-    }
-    if (category === undefined) {
-      return toast({
-        title: "Error",
-        variant: "destructive",
-        description: "Please select a category",
-      });
-    }
-    if (!tags || tags.length === 0) {
-      return toast({
-        title: "Error",
-        variant: "destructive",
-        description: "Please select at least one tag",
-      });
-    }
-    if (description.length <= 10) {
-      return toast({
-        title: "Error",
-        variant: "destructive",
-        description: "Please enter a description of length atleast 10",
-      });
-    }
-
-    const res = await createNewGroup(title, description, category, tags);
-    if (res) {
+    const res:actionRes = await createNewGroup(title, description, category, tags);
+    if (res.success) {
       router.push("/groups");
-    } else if (res === null) {
-      toast({
-        title: "Error",
-        variant: "destructive",
-        description: "Error Occured while creating group",
-      });
     } else {
       toast({
         title: "Error",
         variant: "destructive",
-        description: "Group already exists",
+        description: res.message,
       });
     }
   }

@@ -4,40 +4,48 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
+import { Category } from "@/db/schema"
 import { Button } from "@/components/ui/button"
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react"
 import { getExistingCategories } from "@/actions/groups/selectCategory"
 import { createNewCategory } from "@/actions/groups/newCategory"
 import { useToast } from "@/components/ui/use-toast"
-interface Category {
-    id: number,
-    name: string
-}
+import { InferInsertModel } from "drizzle-orm"
 
-export default function ({setSelectedCategory}:{setSelectedCategory:Dispatch<SetStateAction<Category>>}) {
+type TCategory = InferInsertModel<typeof Category>
+
+export default function ({setSelectedCategory}:{setSelectedCategory:Dispatch<SetStateAction<TCategory>>}) {
 
     const {toast} = useToast()
     const [query , setQuery] = useState<string>('')
-    const [catergories , setCategories] = useState<Category[]>([])
+    const [catergories , setCategories] = useState<TCategory[]>([])
 
     async function handleQuery(e:ChangeEvent<HTMLInputElement>) {
         setQuery(e.currentTarget.value)
         if(query.length !== 0 && query.length < 3) return
 
         const res = await getExistingCategories(query)
-        setCategories(res)
+        if(res.success) {
+          setCategories(res.res)
+        } else {
+          toast({
+            title: 'Error',
+            variant: 'destructive',
+            description: res.message
+          })
+        }
     }
 
     async function handleCreate() {
         if(query.length === 0) return
         const res = await createNewCategory(query)
-        if(res !== null) {
-          setCategories([res])
+        if(res.success) {
+          setCategories([res.res])
         } else {
           toast({
             title: 'Error',
             variant: 'destructive',
-            description: 'Category already exists'
+            description: res.message
           })
         }
     }

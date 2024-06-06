@@ -10,36 +10,44 @@ import { useState , ChangeEvent, Dispatch, SetStateAction } from "react"
 import { getExistingTags } from "@/actions/groups/selectTags"
 import { createNewTag } from "@/actions/groups/newTag"
 import { useToast } from "@/components/ui/use-toast"
+import { Tag } from "@/db/schema"
+import { InferInsertModel } from "drizzle-orm"
 
-interface Tag {
-    id: number,
-    name: string
-}
+type TTag = InferInsertModel<typeof Tag>
 
-export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAction<Tag[]>>}) {
+export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAction<TTag[]>>}) {
 
     const {toast} = useToast()
     const [query , setQuery] = useState('')
-    const [tags , setTags] = useState<Tag[]>([])
-    const [selectedTags , setSelectedTags] = useState<Tag[]>([])
+    const [tags , setTags] = useState<TTag[]>([])
+    const [selectedTags , setSelectedTags] = useState<TTag[]>([])
 
     async function handleQuery(e:ChangeEvent<HTMLInputElement>) {
         setQuery(e.target.value)
         if(query.length !== 0 && query.length < 1) return
 
         const res = await getExistingTags(query)
-        setTags(res)
+        if(res.success) {
+          setTags(res.res)
+        } else {
+          toast({
+            title: 'Error',
+            description: res.message,
+            variant: 'destructive',
+            duration: 3000
+          })
+        }
     }
 
     async function handleNewTag() {
         if(query.length === 0) return
         const res = await createNewTag(query)
-        if(res !== null) {
-          setTags([res])
+        if(res.success) {
+          setTags([res.res])
         } else {
           toast({
             title: 'Error',
-            description: 'Tag already exists',
+            description: res.message,
             variant: 'destructive',
             duration: 3000
           })

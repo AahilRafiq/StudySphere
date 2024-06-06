@@ -41,7 +41,7 @@ export async function POST(req: NextRequest , res: NextResponse) {
 
     const newtoken = generateToken({
         id: newuser.id,
-        name: newuser.name
+        name: newuser.name!
     })
 
     const response = NextResponse.json({

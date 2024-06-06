@@ -13,24 +13,30 @@ export default function () {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPass,setConfirmPass] = useState("")
-  const [error, setError] = useState("");
+  const [displayError, setDisplayError] = useState("");
+  const [error, setError] = useState(false);
 
   async function handleSignUp() {
 
     if(password !== confirmPass) {
-        setError("Passwords dont match!")
+      setDisplayError("Passwords dont match!")
         return
     }
 
     const res = await SignUp(username,email, password,confirmPass);
 
     if(res.status === 401) {
-        setError("Enter correct credentials , make sure passwords match and has more than 5 characters")
+      setDisplayError("Enter correct credentials , make sure passwords match and has more than 5 characters")
         return
     }
 
     if (res.status === 409) {
-      setError("User already Exists!");
+      setDisplayError("User already Exists!");
+      return;
+    }
+
+    if(res.status === 500) {
+      setError(true);
       return;
     }
 
@@ -46,7 +52,7 @@ export default function () {
             <p className="text-gray-500 dark:text-gray-400">
               Enter your username , email and password below to create a new account
             </p>
-            <p className=" text-red-500">{error}</p>
+            <p className=" text-red-500">{displayError}</p>
           </div>
           <div className="space-y-4">
             <div className="space-y-2">
