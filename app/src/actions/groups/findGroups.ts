@@ -43,9 +43,14 @@ export async function findGroups(filters:IFilter , search:string):Promise<action
             ).as('q3')
 
         let q4 = await db
-            .select()
-            .from(Group)
-            .where(inArray( Group.id , db.select({ groupID : q3.groupID }).from(q3)))
+          .select()
+          .from(Group)
+          .where(
+            and(
+                inArray(Group.id, db.select({ groupID: q3.groupID }).from(q3)),
+                // use fuzzy search here
+            )
+          );
 
         res.success = true
         res.res = q4
