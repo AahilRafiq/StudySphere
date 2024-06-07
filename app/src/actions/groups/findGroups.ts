@@ -1,13 +1,16 @@
 'use server'
-import { Group , GroupTag , Tag , Category } from "@/db/schema";
+import { Group , GroupTag , Tag , Category , UserGroup } from "@/db/schema";
 import { db } from "@/db/db";
-import { InferSelectModel , eq } from "drizzle-orm";
+import { InferSelectModel , eq , ne , not } from "drizzle-orm";
 import { sql , inArray , and} from "drizzle-orm";
 import { actionRes } from "@/types/serverActionResponse";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/auth/auth";
 
 type TCategory = InferSelectModel<typeof Category>
 type TTag = InferSelectModel<typeof Tag>
 type TGroup = InferSelectModel<typeof Group>
+type TUserGroup = InferSelectModel<typeof UserGroup>
 type Result = {
     Category: TCategory,
     Group: TGroup 
@@ -25,10 +28,15 @@ export async function findGroups(filters:IFilter , search:string):Promise<action
         res: undefined
     }
     const tagsIdArray = filters.tags.map(tag => tag.id)
-    const categoriesIdArray = filters.category.map(cat => cat.id)    
+    const categoriesIdArray = filters.category.map(cat => cat.id)   
+    const cookie = cookies().get('auth_token') 
 
     try {
 
+        const user = verifyToken(cookie.value)
+
+        // Filter only not joined groups
+        let q0 = q0notJoinedGroups(user.id)
         // Filter based on categories
         let q1 = q1withoutCategories()
         // Filter based on tags
@@ -44,6 +52,7 @@ export async function findGroups(filters:IFilter , search:string):Promise<action
             })
             .from(Group)
             .where(and(
+                    not(inArray(Group.id , db.select({groupID : q0.groupID}).from(q0))),
                     inArray(Group.id , db.select({groupID : q1.groupID}).from(q1)),
                     inArray(Group.id , db.select({groupID : q2.groupID}).from(q2))
                 )
@@ -76,6 +85,12 @@ export async function findGroups(filters:IFilter , search:string):Promise<action
     }
 }
 
+
+function q0notJoinedGroups(userID: number) {
+    return db.select({
+        groupID: UserGroup.groupId
+    }).from(UserGroup).where(eq(UserGroup.userId , userID)).as('q0')
+}
 function q1withCategories(categoryIDs: number[]) {
     return db.select({
         groupID:Group.id
