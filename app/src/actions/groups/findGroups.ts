@@ -25,11 +25,14 @@ export async function findGroups(filters:IFilter , search:string):Promise<action
 
     try {
 
+        // Filter based on categories
         let q1 = q1withoutCategories()
+        // Filter based on tags
         let q2 = q2withoutTags()
         if(categoriesIdArray.length > 0) q1 = q1withCategories(categoriesIdArray)
         if(tagsIdArray.length > 0) q2 = q2withTags(tagsIdArray)
 
+        // Query returns group ids based on tags and categories filter
         let q3 = db
             .select({
                 groupID : Group.id,
@@ -42,17 +45,18 @@ export async function findGroups(filters:IFilter , search:string):Promise<action
                 )
             ).as('q3')
 
-            const q4 = await db
-              .select()
-              .from(Group)
-              .$dynamic()
-              .where(
-                and(
-                  inArray(Group.id, db.select({ groupID: q3.groupID }).from(q3)),
-                  search.length ? sql`similarity(${Group.name}, ${search}::text) > 0.25` : undefined
-                )
+        // Filter groups based on q4 , and fuzzy search using trigram
+        const q4 = await db
+            .select()
+            .from(Group)
+            .$dynamic()
+            .where(
+              and(
+                inArray(Group.id, db.select({ groupID: q3.groupID }).from(q3)),
+                search.length ? sql`similarity(${Group.name}, ${search}::text) > 0.25` : undefined
               )
-              .limit(15);
+            )
+            .limit(15);
 
         res.success = true
         res.res = q4
