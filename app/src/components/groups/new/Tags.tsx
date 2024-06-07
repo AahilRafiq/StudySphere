@@ -6,7 +6,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectL
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
-import { useState , ChangeEvent, Dispatch, SetStateAction } from "react"
+import { useState , useEffect , ChangeEvent, Dispatch, SetStateAction } from "react"
 import { getExistingTags } from "@/actions/groups/selectTags"
 import { createNewTag } from "@/actions/groups/newTag"
 import { useToast } from "@/components/ui/use-toast"
@@ -22,22 +22,22 @@ export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAct
     const [tags , setTags] = useState<TTag[]>([])
     const [selectedTags , setSelectedTags] = useState<TTag[]>([])
 
-    async function handleQuery(e:ChangeEvent<HTMLInputElement>) {
-        setQuery(e.target.value)
-        if(query.length !== 0 && query.length < 1) return
-
-        const res = await getExistingTags(query)
-        if(res.success) {
-          setTags(res.res)
-        } else {
-          toast({
-            title: 'Error',
-            description: res.message,
-            variant: 'destructive',
-            duration: 3000
-          })
+    useEffect(() => {
+        async function handleQuery() {
+            const res = await getExistingTags(query)
+            if(res.success) {
+              setTags(res.res)
+            } else {
+              toast({
+                title: 'Error',
+                description: res.message,
+                variant: 'destructive',
+                duration: 3000
+              })
+            }
         }
-    }
+        handleQuery()
+    } , [query])
 
     async function handleNewTag() {
         if(query.length === 0) return
@@ -100,7 +100,7 @@ export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAct
                 {/* Create a new Tag */}
                 <div className="px-4 py-2">
                   <div className="flex items-center space-x-2">
-                    <Input onChange={handleQuery} placeholder="Search or create new" />
+                    <Input onChange={e=>setQuery(e.target.value)} placeholder="Search or create new" />
                     <Button onClick={handleNewTag} size="sm">Create</Button>
                   </div>
                 </div>
