@@ -1,21 +1,25 @@
 'use server'
 import { Group , GroupTag , Tag , Category } from "@/db/schema";
 import { db } from "@/db/db";
-import { InferSelectModel, like } from "drizzle-orm";
+import { InferSelectModel , eq } from "drizzle-orm";
 import { sql , inArray , and} from "drizzle-orm";
 import { actionRes } from "@/types/serverActionResponse";
 
 type TCategory = InferSelectModel<typeof Category>
 type TTag = InferSelectModel<typeof Tag>
 type TGroup = InferSelectModel<typeof Group>
+type Result = {
+    Category: TCategory,
+    Group: TGroup 
+}[]
 interface IFilter {
     category: TCategory[],
     tags: TTag[],
 }
 
-export async function findGroups(filters:IFilter , search:string):Promise<actionRes<TGroup[]>> {
+export async function findGroups(filters:IFilter , search:string):Promise<actionRes<Result>> {
 
-    let res:actionRes<TGroup[]> = {
+    let res:actionRes<Result> = {
         success: undefined,
         message: undefined,
         res: undefined
@@ -56,12 +60,15 @@ export async function findGroups(filters:IFilter , search:string):Promise<action
                 search.length ? sql`similarity(${Group.name}, ${search}::text) > 0.25` : undefined
               )
             )
+            .leftJoin(Category , eq(Category.id , Group.categoryId))
             .limit(15);
 
         res.success = true
         res.res = q4
         return res
+
     } catch(err) {
+
         console.log(err);
         res.success = false
         res.message = 'Internal Server Error'
@@ -89,17 +96,3 @@ function q2withoutTags() {
         groupID:GroupTag.groupId
     }).from(GroupTag).as('q2Tags')
 }
-
-
-// try {
-//     const q1 = db.select({ field1: GroupTag.groupId })
-//         .from(GroupTag)
-//         .where(inArray(GroupTag.tagId, filters.tags.map(tag => tag.id)))
-//         .as('q1');
-
-//     const groups = await db.select()
-//                    .from(Group)
-//                    .where(inArray(Group.id, db.select({ field1: q1.field1 }).from(q1)));
-
-//     res.success = true
-//     res.res = groups

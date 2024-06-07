@@ -16,13 +16,19 @@ import { useToast } from "@/components/ui/use-toast";
 type TCategory = InferSelectModel<typeof Category>
 type TTag = InferSelectModel<typeof Tag>
 type TGroup = InferSelectModel<typeof Group>
+type DisplayGroup = {
+    id: number,
+    name: string,
+    description: string,
+    category: string,
+}
 interface IFilter {
     category: TCategory[],
     tags: TTag[],
 }
 
 export default function Component() {
-  const [groups, setGroups] = useState<TGroup[]>([]);
+  const [groups, setGroups] = useState<DisplayGroup[]>([]);
   const [query, setQuery] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [filters, setFilters] = useState<IFilter>({
@@ -33,9 +39,18 @@ export default function Component() {
   const { toast } = useToast();
 
   useEffect(() => {
-    findGroups(filters , query).then((res) => {
+    findGroups(filters, query).then((res) => {
       if (res.success) {
-        setGroups(res.res);
+        setGroups(
+          res.res.map(({ Group, Category }) => {
+            return {
+              id: Group.id,
+              name: Group.name,
+              description: Group.description,
+              category: Category.name,
+            }
+          })
+        );
       } else {
         toast({
           title: "Error",
@@ -43,7 +58,7 @@ export default function Component() {
         });
       }
     });
-  } , [filters,query])
+  }, [filters, query])
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -90,7 +105,7 @@ export default function Component() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {/* Group Cards */}
         {groups.map((group) => (
-          <GroupCard group={group} />
+          <GroupCard key={group.id} group={group} />
         ))}
       </div>
     </div>

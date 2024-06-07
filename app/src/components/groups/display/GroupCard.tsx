@@ -1,16 +1,36 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import type { Dispatch, SetStateAction } from "react"
+import { getMembersCount } from "@/actions/groups/getMembersCount";
+import { useState , useEffect } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function ({ group }) {
+
+  const { toast } = useToast();
+  const [membersCount, setMembersCount] = useState<number | undefined>(undefined)
+
+  useEffect(() => {
+    getMembersCount(group.id).then(res => {
+      if(res.success) {
+        setMembersCount(res.res)
+      } else {
+        toast({
+          title: "Error",
+          description: res.message
+        })
+      }
+    })
+  }, [])
+
   return (
-    <Card key={group.id} className="p-4">
+    <Card className="p-4">
       <div className="flex items-center justify-between mb-2">
         <div className="text-sm font-semibold text-gray-500">
           {group.category}
         </div>
         <div className="text-sm font-semibold text-gray-500">
-          {/* {group.members} members */}
+          {membersCount} members
         </div>
       </div>
       <h3 className="text-xl font-bold mb-2">{group.name}</h3>
