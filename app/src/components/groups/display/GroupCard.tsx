@@ -5,33 +5,39 @@ import { getMembersCount } from "@/actions/groups/getMembersCount";
 import { getGroupTags } from "@/actions/groups/getGroupTags";
 import { useState , useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { joinGroup } from "@/actions/groups/joinGroup";
+import { useRouter } from "next/navigation";
 
 export default function ({ group }) {
 
   const { toast } = useToast();
   const [membersCount, setMembersCount] = useState<number | undefined>(undefined)
   const [tags, setTags] = useState<string[] | undefined>(undefined)
+  const router = useRouter()
+
+  async function handleJoin() {
+    const res = await joinGroup(group.id)
+    if(res.success) router.push('/home')
+    else toast({
+      title: "Error",
+      description: res.message
+    })
+  }
 
   useEffect(() => {
     getMembersCount(group.id).then(res => {
-      if(res.success) {
-        setMembersCount(res.res)
-      } else {
-        toast({
-          title: "Error",
-          description: res.message
-        })
-      }
+      if (res.success) setMembersCount(res.res)
+      else toast({
+        title: "Error",
+        description: res.message
+      })
     })
     getGroupTags(group.id).then(res => {
-      if(res.success) {
-        setTags(res.res)
-      } else {
-        toast({
-          title: "Error",
-          description: res.message
-        })
-      }
+      if (res.success) setTags(res.res)
+      else toast({
+        title: "Error",
+        description: res.message
+      })
     }
     )
   }, [])
@@ -54,7 +60,7 @@ export default function ({ group }) {
       </div>
       <p className="text-gray-500">{group.description}</p>
       <div className="mt-4">
-        <Button className="w-full">Join</Button>
+        <Button onClick={handleJoin} className="w-full">Join</Button>
       </div>
     </Card>
   );
