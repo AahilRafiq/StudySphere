@@ -23,7 +23,8 @@ interface IFilter {
 
 export default function Component() {
   const [groups, setGroups] = useState<TGroup[]>([]);
-  const [search, setSearch] = useState("");
+  const [query, setQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [filters, setFilters] = useState<IFilter>({
     category:[],
     tags: [],
@@ -32,7 +33,7 @@ export default function Component() {
   const { toast } = useToast();
 
   useEffect(() => {
-    findGroups(filters , search).then((res) => {
+    findGroups(filters , query).then((res) => {
       if (res.success) {
         setGroups(res.res);
       } else {
@@ -42,14 +43,14 @@ export default function Component() {
         });
       }
     });
-  } , [filters,search])
+  } , [filters,query])
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-2xl font-bold">Find Study Groups</h1>
         <Link href="/groups/new">
-            <Button>Create Group</Button>
+          <Button>Create Group</Button>
         </Link>
       </div>
       <div className="flex items-center mb-8">
@@ -58,12 +59,22 @@ export default function Component() {
           <Input
             placeholder="Search groups..."
             className="pl-8"
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDownCapture={(e) => {
+              e.key === "Enter" && setQuery(searchInput);
+            }}
           />
         </div>
+        <Button 
+          className="mr-3 p-1" 
+          size="icon"
+          onClick={() => setQuery(searchInput)}
+        >
+          <SearchIcon />
+        </Button>
         <Button variant="outline" onClick={() => setIsFilterModalOpen(true)}>
           <FilterIcon className="mr-2 h-4 w-4" />
-          Filters
+          <span className="hidden sm:block">Filters</span>
         </Button>
       </div>
 
