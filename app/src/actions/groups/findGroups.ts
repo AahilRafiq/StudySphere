@@ -42,15 +42,17 @@ export async function findGroups(filters:IFilter , search:string):Promise<action
                 )
             ).as('q3')
 
-        let q4 = await db
-          .select()
-          .from(Group)
-          .where(
-            and(
-                inArray(Group.id, db.select({ groupID: q3.groupID }).from(q3)),
-                // use fuzzy search here
-            )
-          );
+            const q4 = await db
+              .select()
+              .from(Group)
+              .$dynamic()
+              .where(
+                and(
+                  inArray(Group.id, db.select({ groupID: q3.groupID }).from(q3)),
+                  search.length ? sql`similarity(${Group.name}, ${search}::text) > 0.25` : undefined
+                )
+              )
+              .limit(15);
 
         res.success = true
         res.res = q4
