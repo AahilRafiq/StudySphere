@@ -8,6 +8,7 @@ import { cookies } from "next/headers"
 import { verifyToken } from "@/lib/auth/auth"
 import { RequestCookie } from "next/dist/compiled/@edge-runtime/cookies"
 import type { actionRes } from "@/types/serverActionResponse"
+import { userRole } from "@/types/userRoleEnum"
 
 type TCategory = InferInsertModel<typeof Category>
 type TTag = InferInsertModel<typeof Tag>
@@ -73,7 +74,7 @@ export async function createNewGroup(title:string , description:string , categor
         })
         await db.insert(GroupTag).values(groupTags)
         await db.insert(UserGroup).values({
-            role: "Creater",
+            role: userRole.creater,
             groupId: newGroup.id,
             userId: user.id
         })

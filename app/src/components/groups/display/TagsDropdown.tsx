@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
 import { useState , useEffect , ChangeEvent, Dispatch, SetStateAction } from "react"
 import { getExistingTags } from "@/actions/groups/selectTags"
-import { createNewTag } from "@/actions/groups/newTag"
 import { useToast } from "@/components/ui/use-toast"
 import { Tag } from "@/db/schema"
 import { InferInsertModel } from "drizzle-orm"
@@ -37,13 +36,15 @@ export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAct
             }
         }
         handleQuery()
-    } , [query])
+    },[query])
 
-    async function handleNewTag() {
-        if(query.length === 0) return
-        const res = await createNewTag(query)
+    async function handleQuery(e:ChangeEvent<HTMLInputElement>) {
+        setQuery(e.target.value)
+        if(query.length !== 0 && query.length < 1) return
+
+        const res = await getExistingTags(query)
         if(res.success) {
-          setTags([res.res])
+          setTags(res.res)
         } else {
           toast({
             title: 'Error',
@@ -55,17 +56,17 @@ export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAct
     }
 
     function handleSelection(id: number) {
-      const selectedTag = tags.find(tag => tag.id === id)
-      if(selectedTags.find(tag => tag.id === selectedTag.id)) return
-      const newSelectedTags = [...selectedTags , selectedTag]
-      setTagsToSubmit(newSelectedTags)
-      setSelectedTags(newSelectedTags)
+        const selectedTag = tags.find(tag => tag.id === id)
+        if(selectedTags.find(tag => tag.id === selectedTag.id)) return
+        const newSelectedTags = [...selectedTags , selectedTag]
+        setTagsToSubmit(newSelectedTags)
+        setSelectedTags(newSelectedTags)
     }
 
     function handleRemoveTag(id:number) {
-      const newSelectedTags = selectedTags.filter(tag => tag.id !== id)
-      setTagsToSubmit(newSelectedTags)
-      setSelectedTags(newSelectedTags)
+        const newSelectedTags = selectedTags.filter(tag => tag.id !== id)
+        setTagsToSubmit(newSelectedTags)
+        setSelectedTags(newSelectedTags)
     }
 
     return(
@@ -86,7 +87,6 @@ export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAct
             </SelectTrigger>
             <SelectContent>
               <SelectGroup className="flex flex-col">
-                <SelectLabel>Existing Tags</SelectLabel>
 
                 {/* Display tags */}
                 {tags.map(tag => {
@@ -97,11 +97,10 @@ export default function({setTagsToSubmit}:{setTagsToSubmit: Dispatch<SetStateAct
               <Separator />
               <SelectGroup>
 
-                {/* Create a new Tag */}
+                {/* Search for tags */}
                 <div className="px-4 py-2">
                   <div className="flex items-center space-x-2">
-                    <Input onChange={e=>setQuery(e.target.value)} placeholder="Search or create new" />
-                    <Button onClick={handleNewTag} size="sm">Create</Button>
+                    <Input onChange={handleQuery} placeholder="Search" />
                   </div>
                 </div>
 

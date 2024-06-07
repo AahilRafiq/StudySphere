@@ -6,7 +6,7 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectL
 import { Separator } from "@/components/ui/separator"
 import { Category } from "@/db/schema"
 import { Button } from "@/components/ui/button"
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react"
+import { ChangeEvent, Dispatch, SetStateAction, useState , useEffect } from "react"
 import { getExistingCategories } from "@/actions/groups/selectCategory"
 import { createNewCategory } from "@/actions/groups/newCategory"
 import { useToast } from "@/components/ui/use-toast"
@@ -20,21 +20,22 @@ export default function ({setSelectedCategory}:{setSelectedCategory:Dispatch<Set
     const [query , setQuery] = useState<string>('')
     const [catergories , setCategories] = useState<TCategory[]>([])
 
-    async function handleQuery(e:ChangeEvent<HTMLInputElement>) {
-        setQuery(e.currentTarget.value)
-        if(query.length !== 0 && query.length < 3) return
-
-        const res = await getExistingCategories(query)
-        if(res.success) {
-          setCategories(res.res)
-        } else {
-          toast({
-            title: 'Error',
-            variant: 'destructive',
-            description: res.message
-          })
+    useEffect(() => {
+        async function getCategories() {
+            const res = await getExistingCategories(query)
+            if(res.success) {
+              setCategories(res.res)
+            } else {
+              toast({
+                title: 'Error',
+                variant: 'destructive',
+                description: res.message
+              })
+            }
         }
+        getCategories()
     }
+    , [query])
 
     async function handleCreate() {
         if(query.length === 0) return
@@ -77,7 +78,7 @@ export default function ({setSelectedCategory}:{setSelectedCategory:Dispatch<Set
                 <SelectLabel>Create New</SelectLabel>
                 <div className="px-4 py-2">
                   <div className="flex items-center space-x-2">
-                    <Input onChange={handleQuery} placeholder="Search or create new" />
+                    <Input onChange={e=>setQuery(e.target.value)} placeholder="Search or create new" />
                     <Button onClick={handleCreate} size="sm">Create</Button>
                   </div>
                 </div>
