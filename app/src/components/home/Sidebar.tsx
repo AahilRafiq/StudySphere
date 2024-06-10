@@ -2,9 +2,10 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { PlusIcon , BotIcon } from "lucide-react";
+import { PlusIcon, BotIcon, ChevronDown, Cloud } from "lucide-react";
+import SelectGroup from "@/components/home/SelectGroup";
 
-export default function ({isSidebarOpen}) {
+export default function ({ isSidebarOpen }) {
   return (
     <>
       <div
@@ -13,7 +14,7 @@ export default function ({isSidebarOpen}) {
         }`}
       >
         <div className="sticky top-0 p-2">
-          <Button
+          {/* <Button
             variant="ghost"
             className="w-full text-left px-2 justify-start p hover:bg-neutral-900 hover:text-neutral-50 gap-2"
           >
@@ -21,12 +22,15 @@ export default function ({isSidebarOpen}) {
               <BotIcon className="h-4 w-4" />
             </div>
             <div className="grow text-ellipsis overflow-hidden whitespace-nowrap text-sm">
-              Channels
+              Group
             </div>
-            <PlusIcon className="h-4 w-4" />
-          </Button>
+            <ChevronDown className="h-4 w-4" />
+          </Button> */}
+          <SelectGroup />
         </div>
-        <div className="">
+
+        <div >
+          <h2 className="font-bold ml-4 py-2">Channels</h2>
           <div className="grid gap-1 p-2">
             <Link
               href="#"
@@ -63,10 +67,21 @@ export default function ({isSidebarOpen}) {
             >
               Engineering
             </Link>
+            <Button className="w-24" size="sm">
+              <PlusIcon className="h-4 w-4 mr-1" />
+              New
+            </Button>
           </div>
+          <hr className="border-neutral-700" />
+          <h2 className="font-bold ml-2 py-2">Files</h2>
+          <Link href="/home/files">
+            <Button variant="ghost">
+              <Cloud className="h-4 w-4 mr-1" />
+              Open Files
+            </Button>
+          </Link>
         </div>
       </div>
-      
     </>
   );
 }
