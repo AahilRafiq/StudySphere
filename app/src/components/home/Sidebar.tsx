@@ -2,10 +2,15 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { PlusIcon, BotIcon, ChevronDown, Cloud } from "lucide-react";
+import { PlusIcon, Cloud } from "lucide-react";
 import SelectGroup from "@/components/home/SelectGroup";
 
-export default function ({ isSidebarOpen }) {
+interface IProps {
+  isSidebarOpen: boolean;
+}
+
+export default function ({ isSidebarOpen }: IProps) {
+
   return (
     <>
       <div
@@ -14,22 +19,10 @@ export default function ({ isSidebarOpen }) {
         }`}
       >
         <div className="sticky top-0 p-2">
-          {/* <Button
-            variant="ghost"
-            className="w-full text-left px-2 justify-start p hover:bg-neutral-900 hover:text-neutral-50 gap-2"
-          >
-            <div className="rounded-full bg-white text-black flex items-center justify-center w-7 h-7">
-              <BotIcon className="h-4 w-4" />
-            </div>
-            <div className="grow text-ellipsis overflow-hidden whitespace-nowrap text-sm">
-              Group
-            </div>
-            <ChevronDown className="h-4 w-4" />
-          </Button> */}
           <SelectGroup />
         </div>
 
-        <div >
+        <div>
           <h2 className="font-bold ml-4 py-2">Channels</h2>
           <div className="grid gap-1 p-2">
             <Link

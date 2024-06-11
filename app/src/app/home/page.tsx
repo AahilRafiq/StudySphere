@@ -2,7 +2,7 @@
 export default function() {
 
   return (
-    <>Home page</>
+    <div className="m-6">Home page</div>
   );
 }
 

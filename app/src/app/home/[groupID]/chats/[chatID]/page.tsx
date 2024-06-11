@@ -17,7 +17,14 @@ import {
 
 import { Textarea } from "@/components/ui/textarea";
 
-export default async function ({ params }) {
+interface IProps {
+  params: {
+    groupID: string;
+    chatID: string;
+  };
+}
+export default async function ({ params }:IProps) {  
+
   return (
     <div className="flex flex-col max-h-[calc(100vh-4rem)]">
       {/* Top bar */}
