@@ -20,7 +20,7 @@ export default function HomeLayout({
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         ><Ellipsis /></Button>
       <div
-        className={`bg-neutral-950 flex flex-col gap-2 text-white ${
+        className={`bg-neutral-900 md:rounded-r-lg flex flex-col gap-2 text-white ${
           isSidebarOpen ? "block" : "hidden md:flex"
         }`}
       >

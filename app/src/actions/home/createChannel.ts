@@ -11,7 +11,7 @@ import { InferInsertModel } from "drizzle-orm"
 
 type TChatRoom = InferInsertModel<typeof ChatRoom>
 
-export async function createChannel(groupID: number , name: string) {
+export async function createNewChannel(groupID: number , name: string) {
     const token = cookies().get('auth_token')
     if(!token) return actionResponseObj<TChatRoom>(false,'Unauthorized')
 
@@ -27,6 +27,10 @@ export async function createChannel(groupID: number , name: string) {
         )
         if(usergroup.length === 0) {
             return actionResponseObj<TChatRoom>(false,'You Dont Belong to this Group')
+        }
+
+        if(name.length < 4) {
+            return actionResponseObj<TChatRoom>(false,'Name should be atleast 4 chars')
         }
 
         const newChannel = getFirstRecord(await db.insert(ChatRoom).values({
