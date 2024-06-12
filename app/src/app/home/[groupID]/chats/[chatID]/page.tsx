@@ -30,9 +30,9 @@ export default async function ({ params }: { params: IParams }) {
   const chatRoomName = getFirstRecord(await db.select().from(ChatRoom).where(eq(ChatRoom.id, parseInt(params.chatID)))).name;
 
   return (
-    <div className="flex flex-col max-h-[calc(100vh-4rem)]">
+    <div className="flex flex-col min-h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)]">
       {/* Top bar */}
-      <div className="sticky top-0 p-2 bg-white dark:bg-gray-950 shadow-sm items-center justify-between hidden sm:block md:block">
+      <div className="sticky top-0 p-2 bg-white dark:bg-gray-950 border-b-2 items-center justify-between hidden sm:block md:block">
         <div className="flex items-center gap-2 ">
           <div className="flex-1 truncate m-2">
             <div className="font-large text-lg">{chatRoomName}</div>
@@ -47,8 +47,8 @@ export default async function ({ params }: { params: IParams }) {
       </div>
 
       {/* Chats Container */}
-      <div className="flex-1 overflow-y-auto px-6 py-6">
-        <div className="max-w-2xl mx-auto flex flex-col items-start gap-8">
+      <div className="flex-1 min-h-full overflow-y-auto px-6 py-6">
+        <div className="max-w-2xl min-h-full mx-auto flex flex-col items-start gap-8">
 
           {/* Existing Chat message */}
           {messages.map((message, i) => (

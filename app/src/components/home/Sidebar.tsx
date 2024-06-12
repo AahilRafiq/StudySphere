@@ -18,7 +18,7 @@ export default function ({ isSidebarOpen }: IProps) {
           isSidebarOpen ? "block" : "hidden md:flex"
         }`}
       >
-        <div className="sticky top-0 p-2 w-full">
+        <div className=" w-full">
           <SelectGroup />
           <hr className="border-neutral-700 mt-3 w-full" />
           <Channels />
@@ -26,7 +26,7 @@ export default function ({ isSidebarOpen }: IProps) {
 
         <div className="m-3 p-3">
           <hr className="border-neutral-700" />
-          <Link href="/home/files" className="w-full ">
+          <Link href="/home/files/0" className="w-full ">
             <Button className="mt-2 w-full flex flex-row justify-between">
               <div className="flex flex-row gap-2 place-items-center">
                 <Cloud fill="#fff" className="h-5 w-5 " />

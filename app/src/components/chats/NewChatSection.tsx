@@ -71,7 +71,15 @@ export default function ({ token, userID, username }: { token: string, userID: s
 
     // Send a message
     function handleSend() {
-        if (!isConnected(socket)) return;
+        if (!isConnected(socket)) {
+            toast({
+                title: "Error",
+                variant: "destructive",
+                description: "Could not send message. Please try again.",
+            });
+            return;
+        }
+
         socket.send(
             JSON.stringify({
                 type: requestTypes.sendMessage,
@@ -116,7 +124,7 @@ export default function ({ token, userID, username }: { token: string, userID: s
             ))}
 
             {/* Chat Input */}
-            <div className="max-w-2xl sticky bottom-0 w-full mx-auto py-2 flex flex-col gap-1.5 px-4 bg-white dark:bg-gray-950">
+            <div className="max-w-2xl mt-auto sticky bottom-0 w-full mx-auto py-2 flex flex-col gap-1.5 px-4 bg-white dark:bg-gray-950">
                 <div className="relative">
                     <Textarea
                         placeholder="Message #general"

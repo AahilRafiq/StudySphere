@@ -27,7 +27,7 @@ export default function () {
       return;
     }
 
-    router.push("/home");
+    router.refresh();
   }
 
   return (

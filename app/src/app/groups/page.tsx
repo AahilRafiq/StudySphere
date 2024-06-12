@@ -72,7 +72,7 @@ export default function Component() {
         <div className="relative flex-1 mr-4">
           <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500 dark:text-gray-400" />
           <Input
-            placeholder="Search groups..."
+            placeholder="Search groups and press Enter..."
             className="pl-8"
             onChange={(e) => setSearchInput(e.target.value)}
             onKeyDownCapture={(e) => {

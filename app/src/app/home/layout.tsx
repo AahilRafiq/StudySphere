@@ -18,7 +18,9 @@ export default function HomeLayout({
           size="icon"
           className="ml-2 md:hidden"
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-        ><Ellipsis /></Button>
+        ><Ellipsis />
+        
+        </Button>
       <div
         className={`bg-gray-950 md:rounded-r-lg flex flex-col gap-2  ${
           isSidebarOpen ? "block" : "hidden md:flex"
