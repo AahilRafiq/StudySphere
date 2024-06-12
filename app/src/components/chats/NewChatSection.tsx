@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { receivedMessagePayload, requestTypes } from "@/types/socketMessages";
 import { useSocket } from "@/hooks/useSocket";
+import { useRef } from "react";
 
 interface IMessage {
     username: string;
@@ -14,35 +15,50 @@ interface IMessage {
     ownMessage?: boolean | false;
 }
 
-export default function ({ token , userID , username}: { token: string , userID: string , username: string}) {
+export default function ({ token, userID, username }: { token: string, userID: string, username: string }) {
     const params = useParams();
-    const { socket, isConnected } = useSocket(token);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const { socket, connect, isConnected } = useSocket(token);
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [inputText, setInputText] = useState("");
     const groupID = Array.isArray(params.groupID) ? null : params.groupID;
     const chatID = Array.isArray(params.chatID) ? null : params.chatID;
 
     useEffect(() => {
-        if (!isConnected(socket)) return;
+        if (!isConnected(socket)) connect(token)
 
-        socket.send(
-            JSON.stringify({
-                type: requestTypes.joinRoom,
-                message: chatID,
-            })
-        )
+        if (isConnected(socket)) {
+            socket.send(
+                JSON.stringify({
+                    type: requestTypes.joinRoom,
+                    message: chatID,
+                })
+            )
+        }
 
-        socket.onmessage = (data: MessageEvent) => {
+        if (isConnected(socket)) socket.onmessage = (data: MessageEvent) => {
             const socketData = JSON.parse(data.data);
-            const message:receivedMessagePayload = JSON.parse(socketData.message);
-            if(message.userID === parseInt(userID)) return;
-            
+            const message: receivedMessagePayload = JSON.parse(socketData.message);
+            if (message.userID === parseInt(userID)) return;
+
             setMessages((messages) => [
                 ...messages,
                 { username: message.username, message: message.message, ownMessage: false },
             ]);
         }
+
+        return (
+            () => {                
+                if(isConnected(socket)) socket.close();
+            }
+        )
     }, [socket]);
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollIntoView({ behavior: "smooth" , block: "end"});
+        }
+    }, [messages.length]);
 
     function handleSend() {
         if (!isConnected(socket)) return;
@@ -77,13 +93,14 @@ export default function ({ token , userID , username}: { token: string , userID:
             </div>
 
             {/* Chat Input */}
-            <div className="max-w-2xl w-full sticky bottom-0 mx-auto py-2 flex flex-col gap-1.5 px-4 bg-white dark:bg-gray-950">
+            <div  className="max-w-2xl sticky bottom-0 w-full mx-auto py-2 flex flex-col gap-1.5 px-4 bg-white dark:bg-gray-950">
                 <div className="relative">
                     <Textarea
                         placeholder="Message #general"
                         name="message"
                         id="message"
                         rows={1}
+                        value={inputText}
                         onChange={e => setInputText(e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === "Enter" && !e.shiftKey) {
@@ -97,7 +114,7 @@ export default function ({ token , userID , username}: { token: string , userID:
                         type="submit"
                         size="icon"
                         className="absolute top-3 right-3 w-8 h-8"
-                        disabled
+                        onClick={handleSend}
                     >
                         <ArrowUpIcon className="w-4 h-4" />
                         <span className="sr-only">Send</span>
@@ -107,6 +124,9 @@ export default function ({ token , userID , username}: { token: string , userID:
                     Be kind and respectful in your messages.
                 </p>
             </div>
+
+            {/* to scroll into view */}
+            <div ref={scrollRef}></div>
         </>
     );
 }
