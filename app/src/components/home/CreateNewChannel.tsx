@@ -35,10 +35,10 @@ export default function () {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className="w-24" size="sm">
+        <button className="w-24 text-neutral-50 p-2 transition-colors rounded-sm hover:bg-slate-600 gap-1 flex flex-row place-items-center" >
           <PlusIcon className="h-4 w-4 mr-1" />
-          New
-        </Button>
+          <span className="text-sm">New</span>
+        </button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { PlusIcon, Cloud } from "lucide-react";
+import { PlusIcon, Cloud, ChevronRight } from "lucide-react";
 import SelectGroup from "@/components/home/SelectGroup";
 import Channels from "@/components/home/Channels";
 
@@ -14,30 +14,30 @@ export default function ({ isSidebarOpen }: IProps) {
   return (
     <>
       <div
-        className={`bg-neutral-900 md:rounded-r-lg flex flex-col gap-2 text-white ${
+        className={` md:rounded-r-lg flex flex-col h-full justify-between gap-2  ${
           isSidebarOpen ? "block" : "hidden md:flex"
         }`}
       >
-        <div className="sticky top-0 p-2">
+        <div className="sticky top-0 p-2 w-full">
           <SelectGroup />
+          <hr className="border-neutral-700 mt-3 w-full" />
+          <Channels />
         </div>
 
-        <hr className="border-neutral-700" />
-
-        <div>
-
-          <Channels/>
-
+        <div className="m-3 p-3">
           <hr className="border-neutral-700" />
-          <h2 className="font-bold text-lg ml-2 py-2">Files</h2>
-          <Link href="/home/files">
-            <Button variant="ghost">
-              <Cloud className="h-4 w-4 mr-1" />
-              Open Files
+          <Link href="/home/files" className="w-full ">
+            <Button className="mt-2 w-full flex flex-row justify-between">
+              <div className="flex flex-row gap-2 place-items-center">
+                <Cloud fill="#fff" className="h-5 w-5 " />
+                <span>Open Files</span>
+              </div>
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </Link>
         </div>
       </div>
+
     </>
   );
 }

@@ -3,7 +3,7 @@
 import { actionResponseObj } from "@/lib/helpers/actionResHelpers"
 import { cookies } from "next/headers"
 import { db } from "@/db/db"
-import { Group , UserGroup ,ChatRoom } from "@/db/schema"
+import { UserGroup ,ChatRoom } from "@/db/schema"
 import { verifyToken } from "@/lib/auth/auth"
 import { eq ,and} from "drizzle-orm"
 
