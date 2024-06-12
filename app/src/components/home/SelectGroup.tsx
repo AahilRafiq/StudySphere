@@ -38,7 +38,7 @@ export default function () {
 
   return (
     <Select onValueChange={handleSelection}>
-      <SelectTrigger className="text-neutral-50 bg-transparent border-none text-md">
+      <SelectTrigger className="text-neutral-50 bg-transparent border-none text-md my-2">
         <div className="rounded-full bg-white text-black flex items-center justify-center w-7 h-7">
           <BotIcon className="h-4 w-4" />
         </div>

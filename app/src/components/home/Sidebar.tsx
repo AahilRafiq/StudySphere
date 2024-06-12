@@ -20,7 +20,7 @@ export default function ({ isSidebarOpen }: IProps) {
       >
         <div className=" w-full">
           <SelectGroup />
-          <hr className="border-neutral-700 mt-3 w-full" />
+          <hr className="border-neutral-700 w-full" />
           <Channels />
         </div>
 
