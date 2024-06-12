@@ -7,6 +7,10 @@ import NewChatSection from "@/components/chats/NewChatSection";
 import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/auth/auth";
 import { getChatMessages } from "@/lib/helpers/getChatMessages";
+import { db } from "@/db/db";
+import { ChatRoom } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { getFirstRecord } from "@/db/helpers/getFirstRecord";
 
 interface IParams {
   groupID: string;
@@ -23,6 +27,7 @@ export default async function ({ params }: { params: IParams }) {
   }
 
   const messages = await getChatMessages(parseInt(params.chatID));
+  const chatRoomName = getFirstRecord(await db.select().from(ChatRoom).where(eq(ChatRoom.id, parseInt(params.chatID)))).name;
 
   return (
     <div className="flex flex-col max-h-[calc(100vh-4rem)]">
@@ -30,7 +35,7 @@ export default async function ({ params }: { params: IParams }) {
       <div className="sticky top-0 p-2 bg-white dark:bg-gray-950 shadow-sm items-center justify-between hidden sm:block md:block">
         <div className="flex items-center gap-2 ">
           <div className="flex-1 truncate m-2">
-            <div className="font-large text-lg">General</div>
+            <div className="font-large text-lg">{chatRoomName}</div>
           </div>
 
           {/* Channel Settings */}
