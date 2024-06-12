@@ -4,7 +4,6 @@ import http from "http";
 import { reqTypes, request } from "./types/incomingMessages";
 import { UserManager } from "./lib/room";
 import jwt from "jsonwebtoken";
-import { log } from "console";
 
 const WSmanager = new UserManager();
 const server = http.createServer();

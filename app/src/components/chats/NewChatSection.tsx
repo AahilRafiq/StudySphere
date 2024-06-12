@@ -8,6 +8,8 @@ import { useEffect, useState } from "react";
 import { receivedMessagePayload, requestTypes } from "@/types/socketMessages";
 import { useSocket } from "@/hooks/useSocket";
 import { useRef } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import insertNewMessageToDB from "@/actions/chats/newMessage";
 
 interface IMessage {
     username: string;
@@ -17,6 +19,7 @@ interface IMessage {
 
 export default function ({ token, userID, username }: { token: string, userID: string, username: string }) {
     const params = useParams();
+    const { toast } = useToast();
     const scrollRef = useRef<HTMLDivElement>(null);
     const { socket, connect, isConnected } = useSocket(token);
     const [messages, setMessages] = useState<IMessage[]>([]);
@@ -24,6 +27,7 @@ export default function ({ token, userID, username }: { token: string, userID: s
     const groupID = Array.isArray(params.groupID) ? null : params.groupID;
     const chatID = Array.isArray(params.chatID) ? null : params.chatID;
 
+    // Connect to the socket
     useEffect(() => {
         if (!isConnected(socket)) connect(token)
 
@@ -34,6 +38,10 @@ export default function ({ token, userID, username }: { token: string, userID: s
                     message: chatID,
                 })
             )
+        }
+
+        if(isConnected(socket)) {
+            
         }
 
         if (isConnected(socket)) socket.onmessage = (data: MessageEvent) => {
@@ -48,18 +56,20 @@ export default function ({ token, userID, username }: { token: string, userID: s
         }
 
         return (
-            () => {                
-                if(isConnected(socket)) socket.close();
+            () => {
+                if (isConnected(socket)) socket.close();
             }
         )
     }, [socket]);
 
+    // Scroll to the bottom of the chat INSTANTLY on load
     useEffect(() => {
         if (scrollRef.current) {
-            scrollRef.current.scrollIntoView({ behavior: "smooth" , block: "end"});
+            scrollRef.current.scrollIntoView({ block: "end" });
         }
-    }, [messages.length]);
+    }, []);
 
+    // Send a message
     function handleSend() {
         if (!isConnected(socket)) return;
         socket.send(
@@ -75,25 +85,38 @@ export default function ({ token, userID, username }: { token: string, userID: s
             { username: username, message: inputText, ownMessage: true },
         ]);
         setInputText("");
+
+        insertNewMessageToDB(parseInt(chatID), inputText).then((res) => {
+            if (!res.success) {
+                toast({
+                    title: "Error",
+                    variant: "destructive",
+                    description: res.message,
+                });
+            }
+        });
+
+        // Scroll to the bottom of the chat SMOOTHLY
+        if (scrollRef.current) {
+            scrollRef.current.scrollIntoView({ behavior: 'smooth' , block: "end" });
+        }
     }
 
     if (!groupID || !chatID || !userID) return null;
     return (
         <>
             {/* New Chats appear here */}
-            <div className="max-w-2xl w-full mx-auto py-2 flex flex-col gap-2 px-4">
-                {messages.map((message, i) => (
-                    <ChatBubble
-                        key={i}
-                        username={message.username}
-                        message={message.message}
-                        ownMessage={message.ownMessage}
-                    />
-                ))}
-            </div>
+            {messages.map((message, i) => (
+                <ChatBubble
+                    key={i * (Math.floor(Math.random() * 1000))}
+                    username={message.username}
+                    message={message.message}
+                    ownMessage={message.ownMessage}
+                />
+            ))}
 
             {/* Chat Input */}
-            <div  className="max-w-2xl sticky bottom-0 w-full mx-auto py-2 flex flex-col gap-1.5 px-4 bg-white dark:bg-gray-950">
+            <div className="max-w-2xl sticky bottom-0 w-full mx-auto py-2 flex flex-col gap-1.5 px-4 bg-white dark:bg-gray-950">
                 <div className="relative">
                     <Textarea
                         placeholder="Message #general"

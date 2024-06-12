@@ -4,7 +4,7 @@ export default function({username , message , ownMessage = false}) {
             <div className="grid gap-1">
               <div className="font-bold text-sm">{username}</div>
               <div>
-                <pre className="text-wrap font-sans">{message}</pre>
+                <pre className="text-wrap font-sans">{message.toString()}</pre>
               </div>
             </div>
         </div>

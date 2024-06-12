@@ -42,6 +42,7 @@ export default function () {
         {channels.map((channel,index) => {
           return (
             <Link
+              key={channel.id}
               href={`/home/${channel.groupId}/chats/${channel.id}`}
               className="truncate overflow-hidden flex-1 text-md transition-colors rounded-md whitespace-nowrap p-2 block hover:bg-gray-600 hover:text-neutral-50"
               prefetch={false}
