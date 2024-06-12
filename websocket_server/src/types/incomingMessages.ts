@@ -5,5 +5,7 @@ export enum reqTypes{
 
 export type request = {
     type : reqTypes,
-    message : string
+    username?: string,
+    message: string,
+    userID?: number
 }
