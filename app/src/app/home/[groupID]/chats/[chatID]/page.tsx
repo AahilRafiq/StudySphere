@@ -1,19 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
-import {
   ArrowUpIcon,
   MoveHorizontalIcon,
   UsersIcon,
   SettingsIcon,
   Trash2Icon,
 } from "lucide-react";
+import ChatBubble from "@/components/chats/ChatBubble";
 
 import { Textarea } from "@/components/ui/textarea";
 
@@ -29,60 +23,35 @@ export default async function ({ params }:IProps) {
     <div className="flex flex-col max-h-[calc(100vh-4rem)]">
       {/* Top bar */}
       <div className="sticky top-0 p-2 bg-white dark:bg-gray-950 shadow-sm items-center justify-between hidden sm:block md:block">
-        <div className="flex items-center gap-2">
-          <Avatar className="border w-8 h-8">
-            <img src="/placeholder.svg" alt="Image" />
-            <AvatarFallback>YO</AvatarFallback>
-          </Avatar>
-          <div className="flex-1 truncate">
-            <div className="font-medium text-sm">General</div>
+        <div className="flex items-center gap-2 ">
+          <div className="flex-1 truncate m-2">
+            <div className="font-large text-lg">General</div>
             <div className="text-xs text-gray-500 dark:text-gray-400">
               12 online
             </div>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="rounded-full">
-                <MoveHorizontalIcon className="w-4 h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <UsersIcon className="w-4 h-4 mr-2" />
-                View members
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <SettingsIcon className="w-4 h-4 mr-2" />
-                Channel settings
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Trash2Icon className="w-4 h-4 mr-2" />
-                Leave channel
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+
+          {/* Channel Settings */}
+          <Button variant="ghost">
+            <SettingsIcon className="w-5 h-5" />
+          </Button>
+          
         </div>
       </div>
 
       {/* Chats Container */}
       <div className="flex-1 overflow-y-auto px-6 py-6">
         <div className="max-w-2xl mx-auto flex flex-col items-start gap-8">
-          {/* Chat message */}
-          <div className="flex items-start gap-4 justify-start">
-            <Avatar className="border w-8 h-8">
-              <img src="/placeholder.svg" alt="Image" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
+          {/* /* Chat message */ }
+          <ChatBubble username="John Doe" message="Hey everyone, how's it going?" />
+          <div className="flex items-start md:max-w-md max-w-xs bg-slate-200 rounded-3xl p-4 gap-4 justify-start">
             <div className="grid gap-1">
-              <div className="font-bold">John Doe</div>
-              <div className="prose prose-stone text-sm">
-                <p>Hey everyone, how's it going?</p>
+              <div className="font-bold text-sm">John Doe</div>
+              <div>
+                <pre className="text-wrap font-sans">Hey everyone, howasdfasdfa sdfasdfasdfasdfaffff fffffffffffffffffffffff ffsdfasdfasdfasdf's it going?</pre>
               </div>
             </div>
           </div>
-
-          {/* Chat message */}
           <div className="flex items-start gap-4 ml-auto justify-end">
             <div className="grid gap-1">
               <div className="font-bold text-right">Sarah Anderson</div>
