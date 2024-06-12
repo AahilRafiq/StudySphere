@@ -3,7 +3,13 @@ export enum requestTypes{
     sendMessage = 'SEND_MESSAGE'
 }
 
-export type messagePayload = {
+export type sendingMessagePayload = {
     type : requestTypes,
     message : string
+}
+
+export type receivedMessagePayload = {
+    username: string
+    message : string
+    userID : number
 }

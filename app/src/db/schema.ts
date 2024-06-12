@@ -1,6 +1,7 @@
-import { serial, text, timestamp, pgTable , pgEnum , varchar } from "drizzle-orm/pg-core";
+import { serial, text, timestamp, pgTable , pgView , pgEnum , varchar } from "drizzle-orm/pg-core";
+import { eq } from "drizzle-orm";
 
-/* ENUMS */ 
+/* ENUMS */
 export const roleEnum = pgEnum("role", ["Admin", "Creater", "Member"]);
 
 /* TABLES */ 
@@ -67,3 +68,9 @@ export const File = pgTable("File", {
   folderId: serial("folderId").references(() => Folder.id),
   groupId: serial("groupId").references(() => Group.id),
 });
+
+// Refers existing view , refer the view in the db for correct column names
+export const UserChatRoomView = pgView("UserChatRoomView",{
+  userID: serial("userID"),
+  chatRoomID: serial("chatRoomID"),
+}).existing()
