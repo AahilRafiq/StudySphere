@@ -62,12 +62,12 @@ export default function ({ token, userID, username }: { token: string, userID: s
         )
     }, [socket]);
 
-    // Scroll to the bottom of the chat INSTANTLY on load
+    // Scroll to the bottom of the chat 
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollIntoView({ block: "end" });
         }
-    }, []);
+    }, [messages.length]);
 
     // Send a message
     function handleSend() {
@@ -103,11 +103,6 @@ export default function ({ token, userID, username }: { token: string, userID: s
                 });
             }
         });
-
-        // Scroll to the bottom of the chat SMOOTHLY
-        if (scrollRef.current) {
-            scrollRef.current.scrollIntoView({ behavior: 'smooth' , block: "end" });
-        }
     }
 
     if (!groupID || !chatID || !userID) return null;
