@@ -19,6 +19,7 @@ import { upload } from '@vercel/blob/client';
 import { useToast } from "@/components/ui/use-toast";
 import { displayToast , displayNormalToast } from "@/lib/helpers/actionResHelpers";
 import { addFileDetailsInDB } from "@/actions/files/addFileDetailDB";
+import { useRouter } from "next/navigation";
 
 interface IProps {
     folderID: string;
@@ -27,6 +28,7 @@ interface IProps {
 
 export default function ({ folderID , groupID}: IProps) {
     const [fileName, setFileName] = useState("");
+    const router = useRouter();
     const {toast} = useToast();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
@@ -54,9 +56,10 @@ export default function ({ folderID , groupID}: IProps) {
                     handleUploadUrl: '/api/file/upload',
                 });
 
-                const res = await addFileDetailsInDB(fileName+'.'+fileExtension , 'gg' , folderID , groupID);
+                const res = await addFileDetailsInDB(fileName+'.'+fileExtension , downloadUrl , folderID , groupID);
                 if(res.success) {
                     displayNormalToast(toast ,'Success', 'File Uploaded Successfully');
+                    router.refresh()
                 } else {
                     displayToast(toast , res.err);
                 }

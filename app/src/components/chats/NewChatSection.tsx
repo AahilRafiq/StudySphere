@@ -40,10 +40,6 @@ export default function ({ token, userID, username }: { token: string, userID: s
             )
         }
 
-        if(isConnected(socket)) {
-            
-        }
-
         if (isConnected(socket)) socket.onmessage = (data: MessageEvent) => {
             const socketData = JSON.parse(data.data);
             const message: receivedMessagePayload = JSON.parse(socketData.message);
@@ -106,6 +102,7 @@ export default function ({ token, userID, username }: { token: string, userID: s
     }
 
     if (!groupID || !chatID || !userID) return null;
+    if(!isConnected(socket)) return <div className="m-4">Connecting to Server...</div>;
     return (
         <>
             {/* New Chats appear here */}

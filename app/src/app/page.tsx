@@ -29,7 +29,7 @@ export default function Component() {
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row">
                 <Link
-                  href="#"
+                  href="/groups"
                 >
                   <Button>Get Started</Button>
                 </Link>
