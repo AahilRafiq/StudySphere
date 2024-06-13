@@ -5,6 +5,7 @@ import Folder from "@/components/files/Folder"
 import Link from "next/link"
 import NewFolderModal from "@/components/files/NewFolderModal"
 import UploadFileModal from "@/components/files/UploadFileModal"
+import { getFolders } from "@/lib/helpers/getFolders"
 
 interface IProps {
     params: {
@@ -14,6 +15,9 @@ interface IProps {
 }
 
 export default async function ({params}:IProps) {
+
+    const folders = await getFolders(params.groupID, params.folderID)    
+
     return (
         <div className="flex flex-col h-screen">
             <header className="bg-gray-100 dark:bg-gray-950 p-4 flex items-center justify-between">
@@ -26,8 +30,8 @@ export default async function ({params}:IProps) {
                             <span className="sr-only">Go Home</span>
                         </Button>
                     </Link>
-                    <NewFolderModal parentFolderID={params.folderID}/>
-                    <UploadFileModal folderID={params.folderID} />
+                    <NewFolderModal parentFolderID={params.folderID} groupID={params.groupID}/>
+                    <UploadFileModal folderID={params.folderID} groupID={params.groupID}/>
 
                 </div>
                 <div className="flex items-center gap-2">
@@ -40,9 +44,9 @@ export default async function ({params}:IProps) {
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-4">
 
                     {/* File/Folder Cards */}
-
-                    <Folder folderName="Damnasdfasdfasdf" />
-                    <File fileName="image.jpg" />
+                    {folders.map(folder => {
+                        return <Folder folderName={folder.name} groupID={params.groupID} folderID={folder.id}/>
+                    })}
 
                 </div>
             </div>

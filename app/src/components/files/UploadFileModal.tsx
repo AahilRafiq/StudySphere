@@ -2,7 +2,6 @@
 
 import {
     AlertDialog,
-    AlertDialogAction,
     AlertDialogCancel,
     AlertDialogContent,
     AlertDialogDescription,
@@ -19,9 +18,10 @@ import { UploadIcon } from "lucide-react";
 
 interface IProps {
     folderID: string;
+    groupID: string;
 }
 
-export default function ({ folderID }: IProps) {
+export default function ({ folderID , groupID}: IProps) {
     const [fileName, setFileName] = useState("");
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 

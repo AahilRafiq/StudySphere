@@ -15,14 +15,30 @@ import { Button } from "@/components/ui/button"
 import { FolderPlusIcon } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { useState } from "react"
+import { createNewFolder } from "@/actions/files/createNewFolder"
+import { useToast } from "@/components/ui/use-toast"
+import { displayToast } from "@/lib/helpers/actionResHelpers"
+import { useRouter } from "next/navigation"
 
 interface IProps {
+    groupID: string
     parentFolderID: string
 }
 
-export default function ({parentFolderID}:IProps) {
+export default function ({parentFolderID , groupID}:IProps) {
 
+    const {toast} = useToast()
+    const router = useRouter()
     const [folderName, setFolderName] = useState("")
+
+    async function handleCreateFolder(){
+        const res = await createNewFolder(groupID, parentFolderID, folderName)
+        if(res.success){
+            router.refresh()
+        }else{
+            displayToast(toast, res.err)
+        }
+    }
 
     return (
         <AlertDialog>
@@ -43,7 +59,7 @@ export default function ({parentFolderID}:IProps) {
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction>Create</AlertDialogAction>
+                    <AlertDialogAction onClick={handleCreateFolder}>Create</AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>

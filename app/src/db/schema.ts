@@ -1,4 +1,4 @@
-import { serial, text, timestamp, pgTable , pgView , pgEnum , varchar } from "drizzle-orm/pg-core";
+import { serial, text, timestamp,integer, pgTable , pgView , pgEnum , varchar, AnyPgColumn } from "drizzle-orm/pg-core";
 import { eq } from "drizzle-orm";
 
 /* ENUMS */
@@ -57,8 +57,8 @@ export const GroupTag = pgTable("GroupTag", {
 export const Folder = pgTable("Folder", {
   id: serial("id").primaryKey(),
   name: text("name"),
-  parentId: serial("parentFolderId").references(() => Folder.id),
-  groupId: serial("groupId").references(() => Group.id),
+  parentId: integer("parentId").references(():AnyPgColumn => Folder.id),
+  groupId: integer("groupId").references(() => Group.id),
 });
 
 export const File = pgTable("File", {
