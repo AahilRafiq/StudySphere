@@ -59,6 +59,6 @@ server.on("upgrade", (request, socket, head) => {
   });
 });
 
-server.listen(8080, () => {
+server.listen(process.env.PORT || 8080, () => {
   console.log("Server is listening on port 8080");
 });
