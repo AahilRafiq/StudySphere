@@ -1,5 +1,3 @@
-import { useToast } from "@/components/ui/use-toast"
-
 export function actionResponseObj<T>(success:boolean , err?:string , res?: T) {
     return {
         success,
@@ -13,5 +11,13 @@ export function displayToast(toast:any, err: string) {
         title: "Error",
         variant: "destructive",
         description: err
+    })
+}
+
+export function displayNormalToast(toast:any,title:string, msg: string) {
+    toast({
+        title: title,
+        variant: "default",
+        description: msg
     })
 }

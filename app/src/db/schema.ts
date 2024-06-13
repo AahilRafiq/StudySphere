@@ -65,8 +65,8 @@ export const File = pgTable("File", {
   id: serial("id").primaryKey(),
   name: text("name"),
   url: text("url"),
-  folderId: serial("folderId").references(() => Folder.id),
-  groupId: serial("groupId").references(() => Group.id),
+  folderId: integer("folderId").references(() => Folder.id),
+  groupId: integer("groupId").references(() => Group.id),
 });
 
 // Refers existing view , refer the view in the db for correct column names

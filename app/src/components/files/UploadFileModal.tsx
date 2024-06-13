@@ -15,6 +15,10 @@ import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { UploadIcon } from "lucide-react";
+import { upload } from '@vercel/blob/client';
+import { useToast } from "@/components/ui/use-toast";
+import { displayToast , displayNormalToast } from "@/lib/helpers/actionResHelpers";
+import { addFileDetailsInDB } from "@/actions/files/addFileDetailDB";
 
 interface IProps {
     folderID: string;
@@ -23,6 +27,7 @@ interface IProps {
 
 export default function ({ folderID , groupID}: IProps) {
     const [fileName, setFileName] = useState("");
+    const {toast} = useToast();
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,12 +36,37 @@ export default function ({ folderID , groupID}: IProps) {
         }
     };
 
-    const handleUploadClick = () => {
+    const handleUploadClick = async () => {
         if (selectedFile) {
 
             const fileExtension = getFileExtention(selectedFile.name);
 
-            alert(`Selected file: ${selectedFile.name} , ${fileExtension}`);
+            // file size limit is 10MB
+            if(selectedFile.size > 1024 * 1024 * 10) {
+                alert("File size limit is 10MB");
+                return;
+            }
+
+            try {
+                displayNormalToast(toast ,'Uploading', 'Please wait while we upload the file');
+                const {downloadUrl} = await upload(fileName+fileExtension, selectedFile, {
+                    access: 'public',
+                    handleUploadUrl: '/api/file/upload',
+                });
+
+                const res = await addFileDetailsInDB(fileName+'.'+fileExtension , 'gg' , folderID , groupID);
+                if(res.success) {
+                    displayNormalToast(toast ,'Success', 'File Uploaded Successfully');
+                } else {
+                    displayToast(toast , res.err);
+                }
+
+            } catch(err) {
+                console.log(err);
+                displayToast(toast , "Error while uploading file");
+            }
+
+
         } else {
             alert("No file selected");
         }
@@ -52,7 +82,7 @@ export default function ({ folderID , groupID}: IProps) {
             </AlertDialogTrigger>
             <AlertDialogContent>
                 <AlertDialogHeader>
-                    <AlertDialogTitle>Upload a file</AlertDialogTitle>
+                    <AlertDialogTitle>Upload a file (10mb max size)</AlertDialogTitle>
                     <AlertDialogDescription>
                         <div className="sm:max-w-[425px]">
                             <div className="space-y-4">

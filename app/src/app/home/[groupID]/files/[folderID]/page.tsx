@@ -6,6 +6,7 @@ import Link from "next/link"
 import NewFolderModal from "@/components/files/NewFolderModal"
 import UploadFileModal from "@/components/files/UploadFileModal"
 import { getFolders } from "@/lib/helpers/getFolders"
+import { getFiles } from "@/lib/helpers/getFiles"
 
 interface IProps {
     params: {
@@ -16,7 +17,8 @@ interface IProps {
 
 export default async function ({params}:IProps) {
 
-    const folders = await getFolders(params.groupID, params.folderID)    
+    const folders = await getFolders(params.groupID, params.folderID)
+    const files = await getFiles(params.groupID, params.folderID)    
 
     return (
         <div className="flex flex-col h-screen">
@@ -45,7 +47,11 @@ export default async function ({params}:IProps) {
 
                     {/* File/Folder Cards */}
                     {folders.map(folder => {
-                        return <Folder folderName={folder.name} groupID={params.groupID} folderID={folder.id}/>
+                        return <Folder key={folder.id} folderName={folder.name} groupID={params.groupID} folderID={folder.id}/>
+                    })}
+
+                    {files.map(file => {
+                        return <File key={file.id} fileName={file.name} fileUrl={file.url}/>
                     })}
 
                 </div>
