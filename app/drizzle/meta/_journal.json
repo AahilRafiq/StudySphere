@@ -15,6 +15,13 @@
       "when": 1717505523671,
       "tag": "0001_many_daimon_hellstrom",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1718276952788,
+      "tag": "0002_medical_gateway",
+      "breakpoints": true
     }
   ]
 }
