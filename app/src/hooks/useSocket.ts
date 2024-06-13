@@ -7,7 +7,7 @@ export function useSocket(token:string) {
         const params = new URLSearchParams({
             token: token
         })
-        const newSocket = new WebSocket(`ws://localhost:8080?${params.toString()}`)
+        const newSocket = new WebSocket(`ws://${process.env.WEBSOCKET_SERVER_URL}?${params.toString()}`)
         newSocket.onopen =  () => setSocket(newSocket)
     }
 

@@ -37,7 +37,6 @@ export default function () {
   if (loading) return <p className="m-2 p-2">Loading...</p>;
   return (
     <>
-      {/* <h2 className=" text-neutral-400 text-sm ml-4">Channels</h2> */}
       <div className="grid gap-1 p-2">
         {channels.map((channel,index) => {
           return (
@@ -74,7 +73,3 @@ const colors = [
   "bg-indigo-500",
   "bg-pink-500",
 ];
-
-function chooseColor() {
-  return colors[Math.floor(Math.random() * colors.length)];
-}
