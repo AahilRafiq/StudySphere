@@ -31,7 +31,7 @@ export default function () {
       else displayToast(toast, res.err);
       setIsLoading(false);
     });
-  }, [params]);
+  }, [params.groupID]);
 
   if (!params || !params.groupID) return null;
   if (loading) return <p className="m-2 p-2">Loading...</p>;
