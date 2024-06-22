@@ -4,6 +4,7 @@ import { db } from "@/db/db"
 import { User } from "@/db/schema"
 import { eq, or } from "drizzle-orm"
 import { getFirstRecord } from "@/db/helpers/getFirstRecord"
+import { hashPassword } from "@/lib/auth/hashPassword"
 
 export async function POST(req: NextRequest , res: NextResponse) {
     
@@ -13,7 +14,7 @@ export async function POST(req: NextRequest , res: NextResponse) {
         email: string,
         confirmPass: string
     }
-    const {username , password ,email , confirmPass }:signUpReqBody = await req.json()
+    let {username , password ,email , confirmPass }:signUpReqBody = await req.json()
     if(username.length < 4 || email.length < 4 || password !== confirmPass || password.length < 6) {
         return NextResponse.json({
             success:'false'
@@ -32,6 +33,8 @@ export async function POST(req: NextRequest , res: NextResponse) {
             success:'false'
         },{ status:409 })
     }
+
+    password = await hashPassword(password)
 
     const newuser = getFirstRecord(await db.insert(User).values({
         name:username,
