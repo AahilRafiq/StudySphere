@@ -1,8 +1,9 @@
+'use client'
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import type { Dispatch, SetStateAction } from "react"
-import { getMembersCount } from "@/actions/groups/getMembersCount";
-import { getGroupTags } from "@/actions/groups/getGroupTags";
+import { getGroupTags } from "@/client-requets/tags/getGroupTags";
+import { getMemberCount } from "@/client-requets/groups/getMemberCount";
 import { useState , useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { joinGroup } from "@/actions/groups/joinGroup";
@@ -25,18 +26,18 @@ export default function ({ group }) {
   }
 
   useEffect(() => {
-    getMembersCount(group.id).then(res => {
+    getMemberCount(group.id).then(res => {
       if (res.success) setMembersCount(res.res)
       else toast({
         title: "Error",
-        description: res.message
+        description: 'Internal Server Error'
       })
     })
     getGroupTags(group.id).then(res => {
       if (res.success) setTags(res.res)
       else toast({
         title: "Error",
-        description: res.message
+        description: 'Internal Server Error'
       })
     }
     )

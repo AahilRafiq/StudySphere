@@ -11,11 +11,10 @@ import { InferSelectModel } from "drizzle-orm";
 import GroupCard from "@/components/groups/display/GroupCard";
 import FilterModal from "@/components/groups/display/FilterModal";
 import { useToast } from "@/components/ui/use-toast";
-import { findGroups } from "@/client_api_req/groups/getGroups";
+import { findGroups } from "@/client-requets/groups/getGroups";
 
 type TCategory = InferSelectModel<typeof Category>
 type TTag = InferSelectModel<typeof Tag>
-type TGroup = InferSelectModel<typeof Group>
 type DisplayGroup = {
     id: number,
     name: string,
