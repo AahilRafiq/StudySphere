@@ -10,8 +10,8 @@ import { Category , Tag , Group } from "@/db/schema";
 import { InferSelectModel } from "drizzle-orm";
 import GroupCard from "@/components/groups/display/GroupCard";
 import FilterModal from "@/components/groups/display/FilterModal";
-import { findGroups } from "@/actions/groups/findGroups";
 import { useToast } from "@/components/ui/use-toast";
+import { findGroups } from "@/client_api_req/groups/getGroups";
 
 type TCategory = InferSelectModel<typeof Category>
 type TTag = InferSelectModel<typeof Tag>
@@ -41,23 +41,23 @@ export default function Component() {
   useEffect(() => {
     findGroups(filters, query).then((res) => {
       if (res.success) {
-        setGroups(
-          res.res.map(({ Group, Category }) => {
-            return {
-              id: Group.id,
-              name: Group.name,
-              description: Group.description,
-              category: Category.name,
-            }
-          })
-        );
+        setGroups(res.res.map((val) => {
+          return {
+            id: val.Group.id,
+            name: val.Group.name,
+            description: val.Group.description,
+            category: val.Category.name,
+          }
+        }));
       } else {
         toast({
           title: "Error",
-          description: res.message,
+          variant: "destructive",
+          description: res.err,
         });
       }
-    });
+    }
+    );
   }, [filters, query])
 
   return (
