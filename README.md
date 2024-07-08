@@ -13,3 +13,6 @@ Check it out here : https://study-sphere-livid.vercel.app/
 ![image](https://github.com/AahilRafiq/StudySphere/assets/128609469/a2e6fce1-18b4-431a-b825-d348d336d822)
 
 ![image](https://github.com/AahilRafiq/StudySphere/assets/128609469/e2ffae58-a277-4e5d-8e9f-567c00d73525)
+
+![image](https://github.com/AahilRafiq/StudySphere/assets/128609469/4233a807-96e6-451a-9cf4-a2f8e812ec95)
+
