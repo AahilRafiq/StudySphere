@@ -37,13 +37,13 @@ export default function Component() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800 rounded-md">
           <div className="container grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 md:px-6">
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg w-12 h-12 bg-[#55efc4] text-3xl flex items-center justify-center">
-                    <Users className="h-6 w-6" />
+                    <Users className="h-6 w-6 dark:text-black" />
                   </div>
                   <CardTitle>Join Study Groups</CardTitle>
                 </div>
@@ -59,13 +59,13 @@ export default function Component() {
               <CardHeader>
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg w-12 h-12 bg-[#ffeaa7] text-3xl flex items-center justify-center">
-                    <Contact className="h-6 w-6" />
+                    <Contact className="h-6 w-6 dark:text-black" />
                   </div>
                   <CardTitle>Create Chat Rooms</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
-                <p className="text-sm/relaxed">
+                <p className="text-sm/relaxed ">
                   Engage in real-time discussions, share resources, and coordinate study sessions with your peers.
                   Create dedicated chat rooms for different topics and subjects.
                 </p>
@@ -75,7 +75,7 @@ export default function Component() {
               <CardHeader>
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg w-12 h-12 bg-[#fdcb6e] text-3xl flex items-center justify-center">
-                    <Cloud className="h-6 w-6" />
+                    <Cloud className="h-6 w-6 dark:text-black" />
                   </div>
                   <CardTitle>Access Cloud Storage</CardTitle>
                 </div>

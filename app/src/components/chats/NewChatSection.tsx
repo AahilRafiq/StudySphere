@@ -17,7 +17,7 @@ interface IMessage {
     ownMessage?: boolean | false;
 }
 
-export default function ({ token, userID, username,msgLen }: { token: string, userID: string, username: string ,msgLen:number}) {
+export default function ({ token, userID, username }: { token: string, userID: string, username: string}) {
     const params = useParams();
     const { toast } = useToast();
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -118,7 +118,7 @@ export default function ({ token, userID, username,msgLen }: { token: string, us
             ))}
 
             {/* Chat Input */}
-            <div className="max-w-2xl mt-auto sticky bottom-0 w-full mx-auto py-2 flex flex-col gap-1.5 px-4 bg-white dark:bg-gray-950">
+            <div className="max-w-2xl mt-auto sticky bottom-0 w-full mx-auto rounded-lg py-2 flex flex-col gap-1.5 px-4 bg-white dark:bg-gray-800">
                 <div className="relative">
                     <Textarea
                         placeholder="Message #general"
