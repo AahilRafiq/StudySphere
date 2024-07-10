@@ -68,6 +68,7 @@ export default function ({ token, userID, username,msgLen }: { token: string, us
 
     // Send a message
     function handleSend() {
+        if(!inputText) return;
         if (!isConnected(socket)) {
             toast({
                 title: "Error",
