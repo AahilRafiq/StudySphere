@@ -21,6 +21,7 @@ export default async function ({ params }: { params: IParams }) {
 
   const token = cookies().get('auth_token');
   const user = verifyToken(token.value);
+  let isLoading: boolean = true;
 
   if (!user) {
     return null;
@@ -28,6 +29,7 @@ export default async function ({ params }: { params: IParams }) {
 
   const messages = await getChatMessages(parseInt(params.chatID));
   const chatRoomName = getFirstRecord(await db.select().from(ChatRoom).where(eq(ChatRoom.id, parseInt(params.chatID)))).name;
+  isLoading = false;
 
   return (
     <div className="flex flex-col min-h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)]">
@@ -62,7 +64,7 @@ export default async function ({ params }: { params: IParams }) {
           }
 
           {/* Fresh Messages */}
-          <NewChatSection token={token.value} userID={user.id.toString()} username={user.name} />
+          {!isLoading && <NewChatSection msgLen={messages.length} token={token.value} userID={user.id.toString()} username={user.name} />}
         </div>
       </div>
 

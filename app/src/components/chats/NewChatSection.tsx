@@ -17,7 +17,7 @@ interface IMessage {
     ownMessage?: boolean | false;
 }
 
-export default function ({ token, userID, username }: { token: string, userID: string, username: string }) {
+export default function ({ token, userID, username,msgLen }: { token: string, userID: string, username: string ,msgLen:number}) {
     const params = useParams();
     const { toast } = useToast();
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -26,6 +26,13 @@ export default function ({ token, userID, username }: { token: string, userID: s
     const [inputText, setInputText] = useState("");
     const groupID = Array.isArray(params.groupID) ? null : params.groupID;
     const chatID = Array.isArray(params.chatID) ? null : params.chatID;
+
+    // Scroll to the bottom of the chat 
+    useEffect(() => {
+        if (scrollRef.current !== null) {
+            scrollRef.current.scrollIntoView({  });
+        }
+    }, [scrollRef.current , messages.length]);
 
     // Connect to the socket
     useEffect(() => {
@@ -58,12 +65,6 @@ export default function ({ token, userID, username }: { token: string, userID: s
         )
     }, [socket]);
 
-    // Scroll to the bottom of the chat 
-    useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollIntoView({ block: "end" });
-        }
-    }, [messages.length]);
 
     // Send a message
     function handleSend() {
