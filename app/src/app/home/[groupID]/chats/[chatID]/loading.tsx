@@ -1,5 +1,5 @@
-export default function() {
-    return(
-        <div className="m-5">Loading...</div>
-    )
+import { FullscreenSpinner } from "@/components/ui/loading";
+
+export default function () {
+    return <FullscreenSpinner/>
 }

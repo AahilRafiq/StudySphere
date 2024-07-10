@@ -17,7 +17,7 @@ interface IMessage {
     ownMessage?: boolean | false;
 }
 
-export default function ({ token, userID, username }: { token: string, userID: string, username: string }) {
+export default function ({ token, userID, username }: { token: string, userID: string, username: string}) {
     const params = useParams();
     const { toast } = useToast();
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -26,6 +26,13 @@ export default function ({ token, userID, username }: { token: string, userID: s
     const [inputText, setInputText] = useState("");
     const groupID = Array.isArray(params.groupID) ? null : params.groupID;
     const chatID = Array.isArray(params.chatID) ? null : params.chatID;
+
+    // Scroll to the bottom of the chat 
+    useEffect(() => {
+        if (scrollRef.current !== null) {
+            scrollRef.current.scrollIntoView({  });
+        }
+    }, [scrollRef.current , messages.length]);
 
     // Connect to the socket
     useEffect(() => {
@@ -58,15 +65,10 @@ export default function ({ token, userID, username }: { token: string, userID: s
         )
     }, [socket]);
 
-    // Scroll to the bottom of the chat 
-    useEffect(() => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollIntoView({ block: "end" });
-        }
-    }, [messages.length]);
 
     // Send a message
     function handleSend() {
+        if(!inputText) return;
         if (!isConnected(socket)) {
             toast({
                 title: "Error",
@@ -116,7 +118,7 @@ export default function ({ token, userID, username }: { token: string, userID: s
             ))}
 
             {/* Chat Input */}
-            <div className="max-w-2xl mt-auto sticky bottom-0 w-full mx-auto py-2 flex flex-col gap-1.5 px-4 bg-white dark:bg-gray-950">
+            <div className="max-w-2xl mt-auto sticky bottom-0 w-full mx-auto rounded-lg py-2 flex flex-col gap-1.5 px-4 bg-white dark:bg-gray-800">
                 <div className="relative">
                     <Textarea
                         placeholder="Message #general"

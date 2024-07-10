@@ -29,7 +29,12 @@ export async function POST(req: NextRequest , res: NextResponse) {
             status:200
         }
     )
-    response.cookies.set('auth_token',newtoken)
+    response.cookies.set('auth_token',newtoken , {
+        httpOnly:true, 
+        sameSite:'strict',
+        secure:true,
+        maxAge: 1000 * 60 * 60 * 24 * 10
+    })
 
     return response
 }

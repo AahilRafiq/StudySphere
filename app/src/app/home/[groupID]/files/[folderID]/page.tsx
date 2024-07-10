@@ -22,7 +22,7 @@ export default async function ({params}:IProps) {
 
     return (
         <div className="flex flex-col h-screen">
-            <header className="bg-gray-100 dark:bg-gray-950 p-4 flex items-center justify-between">
+            <header className=" p-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
 
                     {/* Menu Buttons */}

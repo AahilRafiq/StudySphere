@@ -9,7 +9,7 @@ export type jwtPayload = {
 
 export function generateToken(payload: jwtPayload ) {
     const token =  jwt.sign(payload , process.env.JWT_AUTH_SECRET , {
-        expiresIn : '20 days'
+        expiresIn : '10 days'
     })
     return token
 }

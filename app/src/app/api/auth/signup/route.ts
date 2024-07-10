@@ -50,7 +50,12 @@ export async function POST(req: NextRequest , res: NextResponse) {
     const response = NextResponse.json({
         success:'true'
     },{ status: 201})
-    response.cookies.set('auth_token',newtoken)
+    response.cookies.set('auth_token',newtoken , {
+        httpOnly:true, 
+        sameSite:'strict',
+        secure:true,
+        maxAge: 1000 * 60 * 60 * 24 * 10
+    })
 
     return response
 }

@@ -32,7 +32,7 @@ export default async function ({ params }: { params: IParams }) {
   return (
     <div className="flex flex-col min-h-[calc(100vh-8rem)] max-h-[calc(100vh-8rem)]">
       {/* Top bar */}
-      <div className="sticky top-0 p-2 bg-white dark:bg-gray-950 border-b-2 items-center justify-between hidden sm:block md:block">
+      <div className="sticky top-0 p-2  border-b-2 items-center justify-between hidden sm:block md:block">
         <div className="flex items-center gap-2 ">
           <div className="flex-1 truncate m-2">
             <div className="font-large text-lg">{chatRoomName}</div>
@@ -62,7 +62,7 @@ export default async function ({ params }: { params: IParams }) {
           }
 
           {/* Fresh Messages */}
-          <NewChatSection token={token.value} userID={user.id.toString()} username={user.name} />
+           <NewChatSection token={token.value} userID={user.id.toString()} username={user.name} />
         </div>
       </div>
 
