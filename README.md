@@ -4,9 +4,9 @@
 * have different groups for different areas
 * for each group , have topic channels
 * a file storage for each group to share resources
-* Tech stack : Next.js , node:ws , postgresql + drizzle orm , shadcn ui / tailwind , all in typescript 
+* Tech stack : Next.js , node:ws , postgresql + drizzle orm , shadcn ui / tailwind , all in typescript
 
-Check it out here : https://study-sphere-livid.vercel.app/
+Currently not hosted 👍
 
 ![image](https://github.com/AahilRafiq/StudySphere/assets/128609469/171e48da-6d70-4def-979d-d1723456e1c5)
 
